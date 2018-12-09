@@ -3,7 +3,7 @@
   
     
     <entry>
-      <title>多线程</title>
+      <title>对象锁多生产者消费者模式</title>
       <link href="/2018/12/09/dui-xiang-suo-duo-sheng-chan-zhe-xiao-fei-zhe-mo-shi/"/>
       <url>/2018/12/09/dui-xiang-suo-duo-sheng-chan-zhe-xiao-fei-zhe-mo-shi/</url>
       
@@ -20,6 +20,10 @@
         <tags>
             
             <tag> 消费者模式 </tag>
+            
+            <tag> 对象锁 </tag>
+            
+            <tag> 多线程 </tag>
             
         </tags>
       
