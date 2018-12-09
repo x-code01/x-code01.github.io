@@ -3,6 +3,29 @@
   
     
     <entry>
+      <title>多线程</title>
+      <link href="/2018/12/09/dui-xiang-suo-duo-sheng-chan-zhe-xiao-fei-zhe-mo-shi/"/>
+      <url>/2018/12/09/dui-xiang-suo-duo-sheng-chan-zhe-xiao-fei-zhe-mo-shi/</url>
+      
+        <content type="html"><![CDATA[<h4 id="1、烤鸭资源"><a href="#1、烤鸭资源" class="headerlink" title="1、烤鸭资源"></a>1、烤鸭资源</h4><pre><code>package com.ssm.others;import java.util.concurrent.locks.Condition;import java.util.concurrent.locks.Lock;import java.util.concurrent.locks.ReentrantLock;/** * 烤鸭资源 * * @author wangmaoyu * @create 2017-11-14 23:23 **/public class KaoyaResource {    //烤鸭名字    private String name;    //初始数量    private int num=1;    //判断是否需要线程等待的标志    private boolean flag=false;    //创建对象锁    private Lock lock=new ReentrantLock();    //通过已有的锁获取两组监视器，一组监视生产者，一组监视消费者。    Condition producer_con = lock.newCondition();    Condition consumer_con = lock.newCondition();    /**     * 生产烤鸭     * @param name     */    public  void product(String name){        //先获取锁        lock.lock();    try{        while(flag){  //此时有烤鸭需等待            try {                producer_con.await();            } catch (InterruptedException e) {                e.printStackTrace();            }        }        this.name=name+num;        num++;        System.out.println(Thread.currentThread().getName()+&quot;生产了烤鸭&quot;+this.name);        flag=true;//有烤鸭候改变标志       consumer_con.signal();//唤醒消费线程    }finally {        lock.unlock();    }    }    /**     * 消费烤鸭     */    public  void consume(){        lock.lock();        try{            while(!flag){                try {                   consumer_con.await();                } catch (InterruptedException e) {                    e.printStackTrace();                }            }            System.out.println(Thread.currentThread().getName()+&quot;...消费了........&quot;+this.name);//消费烤鸭1            flag = false;            producer_con.signalAll();//通知生产者生产烤鸭        }finally {            lock.unlock();        }    }}</code></pre><hr><h4 id="2、生产者"><a href="#2、生产者" class="headerlink" title="2、生产者"></a>2、生产者</h4><pre><code>package com.ssm.others;/** * 生产者 * * @author wangmaoyu * @create 2017-11-14 23:40 **/public class Producer  implements  Runnable{    private KaoyaResource kaoyaResource;    public Producer(KaoyaResource kaoyaResource) {        this.kaoyaResource = kaoyaResource;    }    @Override    public void run() {        while (true){            kaoyaResource.product(&quot;北京烤鸭&quot;);        }    }}</code></pre><hr><h4 id="3、消费者"><a href="#3、消费者" class="headerlink" title="3、消费者"></a>3、消费者</h4><pre><code>package com.ssm.others;/** * 消费者 * * @author wangmaoyu * @create 2017-11-14 23:42 **/public class Consumer implements  Runnable {    private KaoyaResource kaoyaResource;    public Consumer(KaoyaResource kaoyaResource) {        this.kaoyaResource = kaoyaResource;    }    @Override    public void run() {    while(true){        kaoyaResource.consume();    }    }}</code></pre><hr><h4 id="4、测试"><a href="#4、测试" class="headerlink" title="4、测试"></a>4、测试</h4><pre><code>package com.ssm.others;/** * 测试 * * @author wangmaoyu * @create 2017-11-14 23:38 **/public class Test {    public static void main(String[] args) {        KaoyaResource kaoyaResource=new KaoyaResource();        Producer producer=new Producer(kaoyaResource);        Consumer consumer=new Consumer(kaoyaResource);        Thread t1=new Thread(producer);        Thread t2=new Thread(producer);        Thread t3=new Thread(consumer);        Thread t4=new Thread(consumer);        t1.start();        t2.start();        t3.start();        t4.start();    }}</code></pre><hr><h4 id="5-结果图"><a href="#5-结果图" class="headerlink" title="5.结果图"></a>5.结果图</h4><p><img src="D:\多生产者消费者.jpg" alt="image"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JAVA </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 消费者模式 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>CentOS7下Tomcat启动慢的原因及解决方案</title>
       <link href="/2018/12/07/test/"/>
       <url>/2018/12/07/test/</url>
