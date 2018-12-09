@@ -3,6 +3,17 @@
   
     
     <entry>
+      <title></title>
+      <link href="/2018/12/09/typora/"/>
+      <url>/2018/12/09/typora/</url>
+      
+        <content type="html"><![CDATA[<pre><code> title: typora-vue-theme安装date: 2018-12-7 21:01:24img: /source/medias/featureimages/23.jpgauthor: wangmaoyucomments: true #是否可评论toc: true #是否显示文章目录categories: Markdowntags: Typoa </code></pre><p>　<strong> SPFK Hexo主题：</strong>用了yilia主题一段时间，感觉还有很多可以提高的地方，就查阅资料，对其进行粗类的修改，但是，有其实还有很多不完善的地方，欢迎大家前捧场。没想到，这么多人喜欢黑色版本的，建议不是每个人都喜欢我的这些功能，所以准备个基础版本，插件可以看教程自行安装。</p><p>注意：使用本主题请仔细查看<a href="http://luuman.github.io/categories/Hexo/" target="_blank" rel="noopener">Hexo主题：SPFK</a>，</p><p>没有使用过Hexo的同学可以看看<a href="http://luuman.github.io/categories/Hexo/" target="_blank" rel="noopener">GitHub Hexo搭建</a>，另外还有一个我自己搭建时，插件的安装教程<a href="http://luuman.github.io/categories/Hexo/" target="_blank" rel="noopener">Hexo插件安装</a></p><p>正如前辈们所说，我们使用博客的目的是分享经验，总结自己，督促自己不断提升。如果你有不喜欢，不断的改进吧。只要你玩的开心！（请不要再这浪费太多精力，去丰富你的博客内容吧，骚年！）</p><p>声明：由于博主一直使用，关于博客仓库，需要设置_config.yml</p><pre><code>## If your site is put in a subdirectory, set url as &#39;http://luuman.github.io/child&#39; and root as &#39;/child/&#39;url: http://luuman.github.io/Blogroot: /Blog/# url: http://luuman.github.io# root: /</code></pre><h2 id="作品展示"><a href="#作品展示" class="headerlink" title="作品展示"></a>作品展示</h2><p>关于作品展示页面，直接去看看<a href="https://github.com/luuman/Hexo" target="_blank" rel="noopener">HEXO仓库</a>，将必要的页面放置进去即可，样式主题已经配置。里面只要配置些图片，链接即可！<img src="/Users/wmy/Desktop/typora_vue_theme_screen_03.png" alt="typora_vue_theme_screen_03"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    <entry>
       <title>CentOS7下Tomcat启动慢的原因及解决方案</title>
       <link href="/2018/12/07/test/"/>
       <url>/2018/12/07/test/</url>
@@ -24,17 +35,6 @@
             <tag> tomcat </tag>
             
         </tags>
-      
-    </entry>
-    
-    <entry>
-      <title></title>
-      <link href="/2018/12/07/typora/"/>
-      <url>/2018/12/07/typora/</url>
-      
-        <content type="html"><![CDATA[<pre><code>title: typora-vue-theme主题介绍date: 2018-12-07 18:25:00author: wangmaoyuimg: /source/medias/featureimages/23.jpgtop: true categories: Markdowntags:  - Typora  - Markdown</code></pre><blockquote><p><a href="https://github.com/blinkfox/typora-vue-theme" target="_blank" rel="noopener">typora-vue-theme</a> 是 Typora Markdown 文档编辑器中一款类似<a href="https://vuejs.org/" target="_blank" rel="noopener">Vue</a>文档风格的主题。</p></blockquote><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><a href="https://www.typora.io/" target="_blank" rel="noopener">Typora</a>是一款支持实时预览的 Markdown 编辑器和阅读器，支持<code>Windows</code>、<code>macOS</code>、<code>Linux</code>三大平台。Typora 作为一款合格的 Markdown 编辑器，支持图片、列表、表格、代码、公式、目录等功能，同时这款软件还支持（一键）动态预览功能，让一切都变得如此干净、纯粹。并且有多种主题模板。<strong>typora-vue-theme 就是参考了 Vue 文档风格而开发的一个 Typora 自定义主题</strong>。</p><h2 id="安装主题"><a href="#安装主题" class="headerlink" title="安装主题"></a>安装主题</h2><ol><li>下载本主题中的<code>vue.css</code>文件和包含字体的<code>vue</code>文件夹；</li><li>打开 Typora，点击“<strong>偏好设置</strong>” =&gt; “<strong>打开主题文件夹</strong>”按钮，将弹出 Typora 的主题文件夹；</li><li>将下载好的<code>vue.css</code>文件和包含字体的<code>vue</code>文件夹放到 Typora 的主题文件夹中；</li><li>关闭并重新打开 Typora，从菜单栏中选择 “<strong>主题</strong>” =&gt; “<strong>Vue</strong>” 即可。</li></ol><h2 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h2><p><img src="/Users/wmy/Desktop/typora_vue_theme_screen_01.png" alt="typora_vue_theme_screen_01"></p><p><img src="/Users/wmy/Desktop/typora_vue_theme_screen_02.png" alt="typora_vue_theme_screen_02"></p><p><img src="/Users/wmy/Desktop/typora_vue_theme_screen_03.png" alt="typora_vue_theme_screen_03"></p><p>!</p>]]></content>
-      
-      
       
     </entry>
     
