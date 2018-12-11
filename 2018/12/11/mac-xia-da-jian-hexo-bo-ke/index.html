@@ -5,12 +5,13 @@
 
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="对象锁多生产者消费者模式, Coder的欢乐时光">
-    <meta name="description" content="1、烤鸭资源package com.ssm.others;
+    <meta name="keywords" content="mac下搭建hexo博客, Coder的欢乐时光">
+    <meta name="description" content="
+Hexo，快速、简洁且高效的博客框架Hexo。本身拥有众多的主题，不同的主题可能拥有不同的功能，导航一般都包含有首页，标签，分类，归档，关于等，其它功能基于主题提供者的额外集成相关插件。至于选用什么主题，用户自行百度就好。
 
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-impo">
+
+
+Hexo">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +19,7 @@ impo">
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>对象锁多生产者消费者模式 | Coder的欢乐时光</title>
+    <title>mac下搭建hexo博客 | Coder的欢乐时光</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -262,13 +263,13 @@ impo">
 
 
 
-<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/2.jpg')">
+<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/19.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        对象锁多生产者消费者模式
+                        mac下搭建hexo博客
                     </div>
                 </div>
             </div>
@@ -379,16 +380,12 @@ impo">
             
             <div class="article-tag">
                 
-                <a href="/tags/消费者模式/" target="_blank">
-                    <span class="chip bg-color">消费者模式</span>
+                <a href="/tags/mac/" target="_blank">
+                    <span class="chip bg-color">mac</span>
                 </a>
                 
-                <a href="/tags/对象锁/" target="_blank">
-                    <span class="chip bg-color">对象锁</span>
-                </a>
-                
-                <a href="/tags/多线程/" target="_blank">
-                    <span class="chip bg-color">多线程</span>
+                <a href="/tags/博客/" target="_blank">
+                    <span class="chip bg-color">博客</span>
                 </a>
                 
             </div>
@@ -398,171 +395,84 @@ impo">
                 <span class="post-cate">
                     <i class="fa fa-bookmark fa-fw icon-category"></i>
                     
-                    <a href="/categories/JAVA/" class="post-category" target="_blank">
-                        JAVA
+                    <a href="/categories/Hexo/" class="post-category" target="_blank">
+                        Hexo
                     </a>
                     
                 </span>
                 
 
                 <span class="post-date">
-                    <i class="fa fa-clock-o fa-fw"></i>2018-12-09
+                    <i class="fa fa-clock-o fa-fw"></i>2018-12-11
                 </span>
             </div>
         </div>
         <hr>
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h4 id="1、烤鸭资源"><a href="#1、烤鸭资源" class="headerlink" title="1、烤鸭资源"></a>1、烤鸭资源</h4><pre><code>package com.ssm.others;
+                <blockquote>
+<p>Hexo，快速、简洁且高效的博客框架Hexo。本身拥有众多的主题，不同的主题可能拥有不同的功能，导航一般都包含有首页，标签，分类，归档，关于等，其它功能基于主题提供者的额外集成相关插件。至于选用什么主题，用户自行百度就好。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Hexo貌似使用js搭建的（具体自行百度），作者本身前端能力水平有限就不去讲在Hexo上开发额外功能了。这篇文章主要讲如何在mac下搭建hexo,至于为什么不讲windows上搭建，我还没学会怎么在上面构建node和npm环境。（插一句，mac下开发是真的舒爽，不像微软会出现一大堆莫名奇怪的问题和卡顿。）</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>另外，作者本身是菜鸟，写作不得当处欢迎各位大佬指出，我好及时修正。之所以写博客其实就是想把学习笔记复习下，让自己充分掌握好所学技能，也锻炼下自己的文字表达能力。<br>废话说了一大截，现在开始来操作吧。</p>
+</blockquote>
+<hr>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><ol>
+<li>首先检查时候安装了git和node.js（我是用brew安装，这个就自行百度吧）,终端输入一下命令。</li>
+</ol>
+<pre><code>node --v 
+git --version
+</code></pre><ol start="2">
+<li>注册github账户，创建仓库，注意仓库名请以用户名命名，这样才能保证你后面能用<br> https://用户名.github.io/  如果要设置域名，需要去购买，域名备案，可以设但没必要，备案麻烦。</li>
+</ol>
+<pre><code>eg: https://x-code01.github.io/ 我的博客地址
+</code></pre><ol start="3">
+<li>配置SSH钥匙，保证github的连通性，后面自己的修改才能提交到github上。<pre><code>ssh-keygen -t rsa -C &quot;your_email@example.com&quot; 遇到密码直接跳过
+cd .ssh
+然后把id_rsa.pub的内容复制出来贴到github用户setting里面的ssh秘钥即可
+ssh -T git@github.com 测试是否设置成功
+</code></pre></li>
+</ol>
+<hr>
+<h2 id="搭建步骤"><a href="#搭建步骤" class="headerlink" title="搭建步骤"></a>搭建步骤</h2><ol>
+<li>安装Hexo</li>
+</ol>
+<pre><code>npm install -g hexo
+npm install hexo-deployer-git --save #这个东西才能运行部署命令
+hexo init #初始化，默认landscape的主题
+</code></pre><ol start="2">
+<li>hexo配置（_config.yml)</li>
+</ol>
+<pre><code>theme: 主题名 #这里配置主题，注意配置文件：后都有空格，另外需要下载其他主题，在thems目录下 git clone 主题仓库地址即可，除此外还在相应的主题目录下的配置文件的配置，一般主题提供者都会说明。
 
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+# 配置仓库以及分支：
+deploy:
+  type: git #必须用git
+  repo: git@github.com:x-code01/x-code01.github.io.git #仓库地址
+  branch: master #分支
 
-/**
- * 烤鸭资源
- *
- * @author wangmaoyu
- * @create 2017-11-14 23:23
- **/
-public class KaoyaResource {
-    //烤鸭名字
-    private String name;
-    //初始数量
-    private int num=1;
-    //判断是否需要线程等待的标志
-    private boolean flag=false;
-    //创建对象锁
-    private Lock lock=new ReentrantLock();
-    //通过已有的锁获取两组监视器，一组监视生产者，一组监视消费者。
-    Condition producer_con = lock.newCondition();
-    Condition consumer_con = lock.newCondition();
-
-    /**
-     * 生产烤鸭
-     * @param name
-     */
-    public  void product(String name){
-        //先获取锁
-        lock.lock();
-    try{
-        while(flag){  //此时有烤鸭需等待
-            try {
-                producer_con.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        this.name=name+num;
-        num++;
-        System.out.println(Thread.currentThread().getName()+&quot;生产了烤鸭&quot;+this.name);
-        flag=true;//有烤鸭候改变标志
-       consumer_con.signal();//唤醒消费线程
-    }finally {
-        lock.unlock();
-    }
-    }
-
-    /**
-     * 消费烤鸭
-     */
-    public  void consume(){
-        lock.lock();
-        try{
-            while(!flag){
-                try {
-                   consumer_con.await();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            System.out.println(Thread.currentThread().getName()+&quot;...消费了........&quot;+this.name);//消费烤鸭1
-            flag = false;
-            producer_con.signalAll();//通知生产者生产烤鸭
-        }finally {
-            lock.unlock();
-        }
-    }
-
-}
-
-
+</code></pre><ol start="3">
+<li>写博客</li>
+</ol>
+<pre><code>hexo new &quot;博客名&quot; # 会在根目录下的/source/_posts的生成相应的博客名.md文件，用markdown语法修改文件类容即可
+</code></pre><ol start="4">
+<li>部署</li>
+</ol>
+<pre><code>hexo clean #清空之前生成的缓存，类似maven clean
+hexo g #打包，这个应该都懂
+hexo d  #同步到你的远程github仓库，就是发布的意思
+hexo s #发布到本地的4000端口上：localhost:4000即可访问
 </code></pre><hr>
-<h4 id="2、生产者"><a href="#2、生产者" class="headerlink" title="2、生产者"></a>2、生产者</h4><pre><code>package com.ssm.others;
-
-/**
- * 生产者
- *
- * @author wangmaoyu
- * @create 2017-11-14 23:40
- **/
-public class Producer  implements  Runnable{
-    private KaoyaResource kaoyaResource;
-
-    public Producer(KaoyaResource kaoyaResource) {
-        this.kaoyaResource = kaoyaResource;
-    }
-
-    @Override
-    public void run() {
-        while (true){
-            kaoyaResource.product(&quot;北京烤鸭&quot;);
-        }
-
-    }
-}
-
-</code></pre><hr>
-<h4 id="3、消费者"><a href="#3、消费者" class="headerlink" title="3、消费者"></a>3、消费者</h4><pre><code>package com.ssm.others;
-
-/**
- * 消费者
- *
- * @author wangmaoyu
- * @create 2017-11-14 23:42
- **/
-public class Consumer implements  Runnable {
-    private KaoyaResource kaoyaResource;
-
-    public Consumer(KaoyaResource kaoyaResource) {
-        this.kaoyaResource = kaoyaResource;
-    }
-
-    @Override
-    public void run() {
-    while(true){
-        kaoyaResource.consume();
-    }
-    }
-}
-
-</code></pre><hr>
-<h4 id="4、测试"><a href="#4、测试" class="headerlink" title="4、测试"></a>4、测试</h4><pre><code>package com.ssm.others;
-
-/**
- * 测试
- *
- * @author wangmaoyu
- * @create 2017-11-14 23:38
- **/
-public class Test {
-    public static void main(String[] args) {
-        KaoyaResource kaoyaResource=new KaoyaResource();
-        Producer producer=new Producer(kaoyaResource);
-        Consumer consumer=new Consumer(kaoyaResource);
-        Thread t1=new Thread(producer);
-        Thread t2=new Thread(producer);
-        Thread t3=new Thread(consumer);
-        Thread t4=new Thread(consumer);
-        t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
-    }
-}
-
-
-</code></pre><hr>
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>hexo s 本地发布测试访问老是报index.html（这不就是单页面应用吗？)，不要怀疑肯定是某个流程弄错了，仔细检查下就没啥问题了，至于哪些流程问题出错了，我也记不清了（这就是写博客的必要性，老年健忘症）。</p>
+<hr>
+<blockquote>
+<p>可能文章写得不是够清楚明了，这就是第一篇，希望各位大佬和小白们谅解下。</p>
+</blockquote>
 
             </div>
             <hr>
@@ -701,7 +611,7 @@ public class Test {
                     <span class="reprint-tip">转载请注明: </span>
                     <a href="http://yoursite.com" class="b-link-green">Coder的欢乐时光</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/2018/12/09/dui-xiang-suo-duo-sheng-chan-zhe-xiao-fei-zhe-mo-shi/" class="b-link-green">对象锁多生产者消费者模式</a>
+                    <a href="/2018/12/11/mac-xia-da-jian-hexo-bo-ke/" class="b-link-green">mac下搭建hexo博客</a>
                 </p>
             </div>
         </div>
@@ -723,7 +633,7 @@ public class Test {
     <div class="row article-row">
         
         <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge left-badge text-color">上一篇</div>
+            <div class="article-badge left-badge text-color">本篇</div>
             <div class="card">
                 <a href="/2018/12/11/mac-xia-da-jian-hexo-bo-ke/">
                     <div class="card-image">
@@ -742,9 +652,9 @@ Hexo，快速、简洁且高效的博客框架Hexo。本身拥有众多的主题
 
 Hexo</div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2018-12-11
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2018-12-11
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -757,6 +667,7 @@ Hexo</div>
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -777,28 +688,31 @@ Hexo</div>
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">下一篇</div>
             <div class="card">
-                <a href="/2018/12/07/test/">
+                <a href="/2018/12/09/dui-xiang-suo-duo-sheng-chan-zhe-xiao-fei-zhe-mo-shi/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="CentOS7下Tomcat启动慢的原因及解决方案">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="对象锁多生产者消费者模式">
                         
-                        <span class="card-title">CentOS7下Tomcat启动慢的原因及解决方案</span>
+                        <span class="card-title">对象锁多生产者消费者模式</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
-                    <div class="summary">
-</div>
+                    <div class="summary">1、烤鸭资源package com.ssm.others;
+
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+impo</div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2018-12-07
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2018-12-09
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/云服务器/" class="post-category" target="_blank">
-                                    云服务器
+                            <a href="/categories/JAVA/" class="post-category" target="_blank">
+                                    JAVA
                                 </a>
                             
                             
@@ -808,12 +722,16 @@ Hexo</div>
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/centOS/" target="_blank">
-                        <span class="chip bg-color">centOS</span>
+                    <a href="/tags/消费者模式/" target="_blank">
+                        <span class="chip bg-color">消费者模式</span>
                     </a>
                     
-                    <a href="/tags/tomcat/" target="_blank">
-                        <span class="chip bg-color">tomcat</span>
+                    <a href="/tags/对象锁/" target="_blank">
+                        <span class="chip bg-color">对象锁</span>
+                    </a>
+                    
+                    <a href="/tags/多线程/" target="_blank">
+                        <span class="chip bg-color">多线程</span>
                     </a>
                     
                 </div>

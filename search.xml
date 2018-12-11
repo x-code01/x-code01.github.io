@@ -3,6 +3,31 @@
   
     
     <entry>
+      <title>mac下搭建hexo博客</title>
+      <link href="/2018/12/11/mac-xia-da-jian-hexo-bo-ke/"/>
+      <url>/2018/12/11/mac-xia-da-jian-hexo-bo-ke/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>Hexo，快速、简洁且高效的博客框架Hexo。本身拥有众多的主题，不同的主题可能拥有不同的功能，导航一般都包含有首页，标签，分类，归档，关于等，其它功能基于主题提供者的额外集成相关插件。至于选用什么主题，用户自行百度就好。</p></blockquote><hr><blockquote><p>Hexo貌似使用js搭建的（具体自行百度），作者本身前端能力水平有限就不去讲在Hexo上开发额外功能了。这篇文章主要讲如何在mac下搭建hexo,至于为什么不讲windows上搭建，我还没学会怎么在上面构建node和npm环境。（插一句，mac下开发是真的舒爽，不像微软会出现一大堆莫名奇怪的问题和卡顿。）</p></blockquote><hr><blockquote><p>另外，作者本身是菜鸟，写作不得当处欢迎各位大佬指出，我好及时修正。之所以写博客其实就是想把学习笔记复习下，让自己充分掌握好所学技能，也锻炼下自己的文字表达能力。<br>废话说了一大截，现在开始来操作吧。</p></blockquote><hr><h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><ol><li>首先检查时候安装了git和node.js（我是用brew安装，这个就自行百度吧）,终端输入一下命令。</li></ol><pre><code>node --v git --version</code></pre><ol start="2"><li>注册github账户，创建仓库，注意仓库名请以用户名命名，这样才能保证你后面能用<br> https://用户名.github.io/  如果要设置域名，需要去购买，域名备案，可以设但没必要，备案麻烦。</li></ol><pre><code>eg: https://x-code01.github.io/ 我的博客地址</code></pre><ol start="3"><li>配置SSH钥匙，保证github的连通性，后面自己的修改才能提交到github上。<pre><code>ssh-keygen -t rsa -C &quot;your_email@example.com&quot; 遇到密码直接跳过cd .ssh然后把id_rsa.pub的内容复制出来贴到github用户setting里面的ssh秘钥即可ssh -T git@github.com 测试是否设置成功</code></pre></li></ol><hr><h2 id="搭建步骤"><a href="#搭建步骤" class="headerlink" title="搭建步骤"></a>搭建步骤</h2><ol><li>安装Hexo</li></ol><pre><code>npm install -g hexonpm install hexo-deployer-git --save #这个东西才能运行部署命令hexo init #初始化，默认landscape的主题</code></pre><ol start="2"><li>hexo配置（_config.yml)</li></ol><pre><code>theme: 主题名 #这里配置主题，注意配置文件：后都有空格，另外需要下载其他主题，在thems目录下 git clone 主题仓库地址即可，除此外还在相应的主题目录下的配置文件的配置，一般主题提供者都会说明。# 配置仓库以及分支：deploy:  type: git #必须用git  repo: git@github.com:x-code01/x-code01.github.io.git #仓库地址  branch: master #分支</code></pre><ol start="3"><li>写博客</li></ol><pre><code>hexo new &quot;博客名&quot; # 会在根目录下的/source/_posts的生成相应的博客名.md文件，用markdown语法修改文件类容即可</code></pre><ol start="4"><li>部署</li></ol><pre><code>hexo clean #清空之前生成的缓存，类似maven cleanhexo g #打包，这个应该都懂hexo d  #同步到你的远程github仓库，就是发布的意思hexo s #发布到本地的4000端口上：localhost:4000即可访问</code></pre><hr><h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>hexo s 本地发布测试访问老是报index.html（这不就是单页面应用吗？)，不要怀疑肯定是某个流程弄错了，仔细检查下就没啥问题了，至于哪些流程问题出错了，我也记不清了（这就是写博客的必要性，老年健忘症）。</p><hr><blockquote><p>可能文章写得不是够清楚明了，这就是第一篇，希望各位大佬和小白们谅解下。</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hexo </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> mac </tag>
+            
+            <tag> 博客 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>对象锁多生产者消费者模式</title>
       <link href="/2018/12/09/dui-xiang-suo-duo-sheng-chan-zhe-xiao-fei-zhe-mo-shi/"/>
       <url>/2018/12/09/dui-xiang-suo-duo-sheng-chan-zhe-xiao-fei-zhe-mo-shi/</url>
