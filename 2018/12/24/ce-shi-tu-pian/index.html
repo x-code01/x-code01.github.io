@@ -5,15 +5,9 @@
 
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="从零开始搭建spring boot脚手架（三）, Coder的欢乐时光">
+    <meta name="keywords" content="测试图片, Coder的欢乐时光">
     <meta name="description" content="
-本篇主要讲述如何使用druid连接mysql，并用jdbcTemplate做测试。
-
-
-druid配置application.yml配置文件如下：
-spring:
-  datasource:
-    type: com.alibaba.d">
+">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -21,7 +15,7 @@ spring:
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>从零开始搭建spring boot脚手架（三） | Coder的欢乐时光</title>
+    <title>测试图片 | Coder的欢乐时光</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -265,13 +259,13 @@ spring:
 
 
 
-<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/8.jpg')">
+<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        从零开始搭建spring boot脚手架（三）
+                        测试图片
                     </div>
                 </div>
             </div>
@@ -380,255 +374,19 @@ spring:
     <div class="card">
         <div class="card-content article-info">
             
-            <div class="article-tag">
-                
-                <a href="/tags/java/" target="_blank">
-                    <span class="chip bg-color">java</span>
-                </a>
-                
-                <a href="/tags/脚手架/" target="_blank">
-                    <span class="chip bg-color">脚手架</span>
-                </a>
-                
-                <a href="/tags/druid/" target="_blank">
-                    <span class="chip bg-color">druid</span>
-                </a>
-                
-                <a href="/tags/jdbcTemplate/" target="_blank">
-                    <span class="chip bg-color">jdbcTemplate</span>
-                </a>
-                
-            </div>
-            
             <div class="post-info">
-                
-                <span class="post-cate">
-                    <i class="fa fa-bookmark fa-fw icon-category"></i>
-                    
-                    <a href="/categories/spring-boot/" class="post-category" target="_blank">
-                        spring boot
-                    </a>
-                    
-                    <a href="/categories/spring-boot/微服务/" class="post-category" target="_blank">
-                        微服务
-                    </a>
-                    
-                </span>
                 
 
                 <span class="post-date">
-                    <i class="fa fa-clock-o fa-fw"></i>2018-12-17
+                    <i class="fa fa-clock-o fa-fw"></i>2018-12-24
                 </span>
             </div>
         </div>
         <hr>
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <blockquote>
-<p>本篇主要讲述如何使用druid连接mysql，并用jdbcTemplate做测试。</p>
-</blockquote>
-<hr>
-<h2 id="druid配置"><a href="#druid配置" class="headerlink" title="druid配置"></a>druid配置</h2><p>application.yml配置文件如下：</p>
-<pre><code>spring:
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    druid:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://106.12.25.134:3306/practice?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false
-      username: 用户名
-      password: 密码
-      max-active: 80
-      initialSize: 5
-      minIdle: 8
-      maxWait: 60000
-      timeBetweenEvictionRunsMillis: 60000
-      minEvictableIdleTimeMillis: 300000
-      validationQuery: SELECT &#39;x&#39;
-      testWhileIdle: true
-      testOnBorrow: false
-      testOnReturn: false
-      poolPreparedStatements: false
-      maxPoolPreparedStatementPerConnectionSize: 20
-      removeAbandoned: true
-      removeAbandonedTimeoutMillis: 20000
-      logAbandoned: true
-      logDifferentThread: true
-      filters: wall,stat
-      connectionProperties:  druid.stat.mergeSql=true;druid.stat.logSlowSql=true;druid.stat.slowSqlMillis=3000
-      useGlobalDataSourceStat: true
-</code></pre><p>配置文件读取类：</p>
-<pre><code>
-@ConfigurationProperties(prefix =&quot;spring.datasource.druid&quot;)
-@Data
-public class DruidProperties {
-    private String driverClassName;
-    private String url;
-    private String username;
-    private String password;
-    private int initialSize;
-    private int minIdle;
-    private int maxActive;
-    private long maxWait;
-    private long timeBetweenEvictionRunsMillis;
-    private long minEvictableIdleTimeMillis;
-    private String validationQuery;
-    private boolean testWhileIdle;
-    private boolean testOnBorrow;
-    private boolean testOnReturn;
-    private boolean poolPreparedStatements;
-    private int maxPoolPreparedStatementPerConnectionSize;
-    private long removeAbandonedTimeoutMillis;
-    private boolean removeAbandoned;
-    private boolean logAbandoned;
-    private boolean logDifferentThread;
-    private String filters;
-    private String connectionProperties;
-    private boolean useGlobalDataSourceStat;
+                <p><img src="/2018/12/24/ce-shi-tu-pian/root/blog/source/_posts/测试图片/ig.jpg" alt="image"></p>
 
-
-}
-
-</code></pre><p>加载数据源配置文件：</p>
-<pre><code>@Configuration
-@EnableConfigurationProperties(DruidProperties.class)
-@ConditionalOnClass({DruidProperties.class})
-@EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class) //去除数据源自动配置
-public class DruidSourceConfigure {
-    @Autowired
-    private DruidProperties properties;
-
-    private DruidDataSource dataSource;
-    @Bean
-    public DataSource dataSource() {
-        this.dataSource = new DruidDataSource();
-
-        this.dataSource.setDriverClassName(properties.getDriverClassName());
-        this.dataSource.setUrl(properties.getUrl());
-        this.dataSource.setUsername(properties.getUsername());
-        if (properties.getUsername() != null) {
-            this.dataSource.setUsername(properties.getUsername());
-        }
-        if (properties.getPassword() != null) {
-            this.dataSource.setPassword(properties.getPassword());
-        }
-
-
-        //加载配置
-        this.dataSource.setInitialSize(properties.getInitialSize());
-        this.dataSource.setMinIdle(properties.getMinIdle());
-        this.dataSource.setMaxActive(properties.getMaxActive());
-        this.dataSource.setMaxWait(properties.getMaxWait());
-        this.dataSource.setTimeBetweenEvictionRunsMillis(properties.getTimeBetweenEvictionRunsMillis());
-        this.dataSource.setMinEvictableIdleTimeMillis(properties.getMinEvictableIdleTimeMillis());
-        this.dataSource.setValidationQuery(properties.getValidationQuery());
-
-        this.dataSource.setTestWhileIdle(properties.isTestWhileIdle());
-        this.dataSource.setTestOnReturn(properties.isTestOnReturn());
-        this.dataSource.setTestOnBorrow(properties.isTestOnBorrow());
-        this.dataSource.setPoolPreparedStatements(properties.isPoolPreparedStatements());
-        this.dataSource.setRemoveAbandoned(properties.isRemoveAbandoned());
-        this.dataSource.setRemoveAbandonedTimeoutMillis(properties.getRemoveAbandonedTimeoutMillis());
-        this.dataSource.setMaxPoolPreparedStatementPerConnectionSize(properties.getMaxPoolPreparedStatementPerConnectionSize());
-
-        this.dataSource.setLogAbandoned(properties.isLogAbandoned());
-        this.dataSource.setLogDifferentThread(properties.isLogDifferentThread());
-        try {
-            this.dataSource.setFilters(properties.getFilters());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        this.dataSource.setUseGlobalDataSourceStat(properties.isUseGlobalDataSourceStat());
-        this.dataSource.setConnectionProperties(properties.getConnectionProperties());
-
-        return dataSource;
-    }
-
-}
-
-</code></pre><p>druid监控：</p>
-<pre><code>@Configuration
-public class DruidMoniterConfigure {
-    /**
-     * 注册一个StatViewServlet
-     * @return
-     */
-    @Bean
-    public ServletRegistrationBean druidStatViewServlet(){
-        //org.springframework.boot.context.embedded.ServletRegistrationBean提供类的进行注册.
-        ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(new StatViewServlet(),&quot;/druid/*&quot;);
-
-        //添加初始化参数：initParams
-        //白名单：
-        servletRegistrationBean.addInitParameter(&quot;allow&quot;,&quot;127.0.0.1&quot;);
-        //IP黑名单 (存在共同时，deny优先于allow) : 如果满足deny的话提示:Sorry, you are not permitted to view this page.
-        servletRegistrationBean.addInitParameter(&quot;deny&quot;,&quot;192.168.1.73&quot;);
-        //登录查看信息的账号密码.
-        servletRegistrationBean.addInitParameter(&quot;loginUsername&quot;,&quot;admin&quot;);
-        servletRegistrationBean.addInitParameter(&quot;loginPassword&quot;,&quot;123456&quot;);
-        //是否能够重置数据.
-        servletRegistrationBean.addInitParameter(&quot;resetEnable&quot;,&quot;false&quot;);
-        return servletRegistrationBean;
-    }
-
-    /**
-     * 注册一个：filterRegistrationBean
-     * @return
-     */
-    @Bean
-    public FilterRegistrationBean druidStatFilter(){
-
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new WebStatFilter());
-
-        //添加过滤规则.
-        filterRegistrationBean.addUrlPatterns(&quot;/*&quot;);
-
-        //添加不需要忽略的格式信息.
-        filterRegistrationBean.addInitParameter(&quot;exclusions&quot;,&quot;*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*&quot;);
-        return filterRegistrationBean;
-    }
-
-
-}
-</code></pre><hr>
-<h2 id="JDBCTemplate测试"><a href="#JDBCTemplate测试" class="headerlink" title="JDBCTemplate测试"></a>JDBCTemplate测试</h2><p>测试controller:</p>
-<pre><code>@RestController
-@RequestMapping(&quot;/movie&quot;)
-public class MovieController {
-    @Autowired
-    private MovieService movieService;
-    @GetMapping(&quot;/list&quot;)
-    public List&lt;MovieVO&gt; getMovies(){
-        List&lt;MovieVO&gt; movieVOList=movieService.getMovies();
-        return movieVOList;
-    }
-}
-
-</code></pre><p>测试service:</p>
-<pre><code>@Service
-public class MovieServiceImpl implements MovieService {
-    @Autowired
-    private MovieMapper movieMapper;
-
-    @Override
-    public List&lt;MovieVO&gt; getMovies() {
-        return movieMapper.getMovies();
-    }
-}
-
-</code></pre><p>测试mapper:</p>
-<pre><code>@Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    public List&lt;MovieVO&gt; getMovies(){
-        String sql=&quot;select * from tb_movie&quot;;
-        List&lt;MovieVO&gt; movieVOList = jdbcTemplate.query(sql, new Object[]{}, new BeanPropertyRowMapper&lt;&gt;(MovieVO.class));
-        if(null!=movieVOList&amp;&amp;movieVOList.size()&gt;0){
-           return movieVOList;
-        }else{
-            return null;
-        }
-    }
-</code></pre>
             </div>
             <hr>
 
@@ -766,7 +524,7 @@ public class MovieServiceImpl implements MovieService {
                     <span class="reprint-tip">转载请注明: </span>
                     <a href="http://yoursite.com" class="b-link-green">Coder的欢乐时光</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/2018/12/17/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-san/" class="b-link-green">从零开始搭建spring boot脚手架（三）</a>
+                    <a href="/2018/12/24/ce-shi-tu-pian/" class="b-link-green">测试图片</a>
                 </p>
             </div>
         </div>
@@ -810,7 +568,7 @@ public class MovieServiceImpl implements MovieService {
     <div class="row article-row">
         
         <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge left-badge text-color">上一篇</div>
+            <div class="article-badge left-badge text-color">本篇</div>
             <div class="card">
                 <a href="/2018/12/24/ce-shi-tu-pian/">
                     <div class="card-image">
@@ -825,9 +583,9 @@ public class MovieServiceImpl implements MovieService {
                     <div class="summary">
 </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2018-12-24
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2018-12-24
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-user fa-fw"></i>
@@ -836,6 +594,7 @@ public class MovieServiceImpl implements MovieService {
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
@@ -844,28 +603,27 @@ public class MovieServiceImpl implements MovieService {
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">下一篇</div>
             <div class="card">
-                <a href="/2018/12/13/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-er/">
+                <a href="/2018/12/17/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-san/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="从零开始搭建spring boot脚手架（二）">
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="从零开始搭建spring boot脚手架（三）">
                         
-                        <span class="card-title">从零开始搭建spring boot脚手架（二）</span>
+                        <span class="card-title">从零开始搭建spring boot脚手架（三）</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary">
-spring boot相关的配置文件以及自定义配置的读取
+本篇主要讲述如何使用druid连接mysql，并用jdbcTemplate做测试。
 
 
-自定义配置首先在application.yml文件里尝试一发自定义配置：
-my:
- name: wmy
- age: 25
-该如何读取这个配置呢？在spring boot中即可通</div>
+druid配置application.yml配置文件如下：
+spring:
+  datasource:
+    type: com.alibaba.d</div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2018-12-13
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2018-12-17
                             </span>
                         <span class="publish-author">
                             
@@ -894,12 +652,12 @@ my:
                         <span class="chip bg-color">脚手架</span>
                     </a>
                     
-                    <a href="/tags/配置/" target="_blank">
-                        <span class="chip bg-color">配置</span>
+                    <a href="/tags/druid/" target="_blank">
+                        <span class="chip bg-color">druid</span>
                     </a>
                     
-                    <a href="/tags/打包/" target="_blank">
-                        <span class="chip bg-color">打包</span>
+                    <a href="/tags/jdbcTemplate/" target="_blank">
+                        <span class="chip bg-color">jdbcTemplate</span>
                     </a>
                     
                 </div>
