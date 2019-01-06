@@ -6,13 +6,6 @@
     }
 }
 
-/* 特例修改小屏幕下文章详情table样式*/
-@media only screen and (max-width: 533px) {
-    #articleContent table{
-        table-layout: fixed;
-    }
-}
-
 /*中等屏幕下(平板类)的样式*/
 @media only screen and (min-width: 600px) and (max-width: 992px) {
     .container {
@@ -771,6 +764,13 @@ article .article-tags .chip {
     margin-top: -60px;
 }
 
+/* 修改小屏幕下文章详情table样式. */
+@media only screen and (max-width: 550px) {
+    #articleContent table{
+        table-layout: fixed;
+    }
+}
+
 @media only screen and (min-width: 1418px) {
     #artDetail {
         margin-top: -60px;
@@ -830,6 +830,11 @@ article .article-tags .chip {
 }
 
 #artDetail .post-info .post-date {
+    color: #525f7f;
+}
+
+#artDetail .post-info .post-read {
+    margin-left: 15px;
     color: #525f7f;
 }
 
@@ -1523,12 +1528,16 @@ footer {
     padding-bottom: 1px;
 }
 
+footer .social-statis {
+    margin-top: 10px;
+}
+
 footer a {
     color: #fff;
 }
 
 footer .copy-right {
-    color: #d5d5d5;
+    color: #d9d9d9;
 }
 
 /*搜索层样式*/
