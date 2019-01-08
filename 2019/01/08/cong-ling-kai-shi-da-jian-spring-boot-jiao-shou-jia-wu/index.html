@@ -5,13 +5,14 @@
 
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="从零开始搭建spring boot脚手架（四）, Coder的欢乐时光">
+    <meta name="keywords" content="从零开始搭建spring boot脚手架（五）, Coder的欢乐时光">
     <meta name="description" content="
-这篇文章主要讲如何用spring boot如何集成mybatis，同时生成通用mapper,省去了xml,do，mapper接口的创建。
+这篇博客主要讲在spring boot如何配置多数据源，这里的多数据源主要是读写分离，至于读写分离的内容有时间慢慢研究。主要通过以下内容配置：
 
 
-需要引入的依赖&amp;lt;dependency&amp;gt;
-    &amp;lt;groupId&amp;gt;tk.">
+application.yml配置数据源连接spring:
+  datasource:
+ ">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -19,7 +20,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>从零开始搭建spring boot脚手架（四） | Coder的欢乐时光</title>
+    <title>从零开始搭建spring boot脚手架（五） | Coder的欢乐时光</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -263,13 +264,13 @@
 
 
 
-<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/18.jpg')">
+<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/19.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        从零开始搭建spring boot脚手架（四）
+                        从零开始搭建spring boot脚手架（五）
                     </div>
                 </div>
             </div>
@@ -388,16 +389,8 @@
                     <span class="chip bg-color">脚手架</span>
                 </a>
                 
-                <a href="/tags/mybatis/" target="_blank">
-                    <span class="chip bg-color">mybatis</span>
-                </a>
-                
-                <a href="/tags/通用mapper/" target="_blank">
-                    <span class="chip bg-color">通用mapper</span>
-                </a>
-                
-                <a href="/tags/自动生成/" target="_blank">
-                    <span class="chip bg-color">自动生成</span>
+                <a href="/tags/多数据源，读写分离/" target="_blank">
+                    <span class="chip bg-color">多数据源，读写分离</span>
                 </a>
                 
             </div>
@@ -420,7 +413,7 @@
                 
 
                 <span class="post-date">
-                    <i class="fa fa-clock-o fa-fw"></i>2018-12-24
+                    <i class="fa fa-clock-o fa-fw"></i>2019-01-08
                 </span>
 				
 				
@@ -433,148 +426,178 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <blockquote>
-<p>这篇文章主要讲如何用spring boot如何集成mybatis，同时生成通用mapper,省去了xml,do，mapper接口的创建。</p>
+<p>这篇博客主要讲在spring boot如何配置多数据源，这里的多数据源主要是读写分离，至于读写分离的内容有时间慢慢研究。主要通过以下内容配置：</p>
 </blockquote>
 <hr>
-<h2 id="需要引入的依赖"><a href="#需要引入的依赖" class="headerlink" title="需要引入的依赖"></a>需要引入的依赖</h2><pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;tk.mybatis&lt;/groupId&gt;
-    &lt;artifactId&gt;mapper-spring-boot-starter&lt;/artifactId&gt; &lt;!-- 引入spring boot需要的mybatis第三方包 ，这里为了集成通用mapper集成tk的--&gt;
-    &lt;version&gt;${mapper.sb.version}&lt;/version&gt;
-&lt;/dependency&gt;
-
-&lt;dependency&gt;
-    &lt;groupId&gt;tk.mybatis&lt;/groupId&gt;
-    &lt;artifactId&gt;mapper&lt;/artifactId&gt;
-    &lt;version&gt;${mapper.version}&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;!--mybatis通用mapper插件配置--&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;
-                &lt;artifactId&gt;mybatis-generator-maven-plugin&lt;/artifactId&gt;
-                &lt;version&gt;1.3.2&lt;/version&gt;
-                &lt;configuration&gt;
-                    &lt;configurationFile&gt;${basedir}/src/main/resources/generator/generatorConfig.xml&lt;/configurationFile&gt;
-                    &lt;overwrite&gt;true&lt;/overwrite&gt;
-                    &lt;verbose&gt;true&lt;/verbose&gt;
-                &lt;/configuration&gt;
-                &lt;dependencies&gt;
-                    &lt;dependency&gt;
-                        &lt;groupId&gt;mysql&lt;/groupId&gt;
-                        &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
-                        &lt;version&gt;${mysql.version}&lt;/version&gt;
-                    &lt;/dependency&gt;
-                    &lt;dependency&gt;
-                        &lt;groupId&gt;tk.mybatis&lt;/groupId&gt;
-                        &lt;artifactId&gt;mapper&lt;/artifactId&gt;
-                        &lt;version&gt;${mapper.version}&lt;/version&gt;
-                    &lt;/dependency&gt;
-                &lt;/dependencies&gt;
-            &lt;/plugin&gt;
-            &lt;!--版本--&gt;
-    &lt;mapper.sb.version&gt;2.1.2&lt;/mapper.sb.version&gt;
-        &lt;mapper.version&gt;3.4.2&lt;/mapper.version&gt;
-
-        &lt;!--  MyBatis Generator后面的generatorConfig.xml读取  --&gt;
-        &lt;!--  Java接口和实体类  --&gt;
-        &lt;targetJavaProject&gt;${basedir}/src/main/java&lt;/targetJavaProject&gt;
-        &lt;targetMapperPackage&gt;com.siteqi.web.mapper&lt;/targetMapperPackage&gt;
-        &lt;targetModelPackage&gt;com.siteqi.web.model&lt;/targetModelPackage&gt;
-        &lt;!--  XML生成路径  --&gt;
-        &lt;targetResourcesProject&gt;${basedir}/src/main/resources&lt;/targetResourcesProject&gt;
-        &lt;targetXMLPackage&gt;mappers&lt;/targetXMLPackage&gt;
-</code></pre><hr>
-<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><pre><code>需要配置一个数据库连接池配置文件给generatorConfig.xml使用
-如图所示：
-![image](20181224233015.png)
-config.properties配置如下：
-</code></pre><pre><code># 数据库配置
-jdbc.driverClass = com.mysql.jdbc.Driver
-jdbc.url = jdbc:mysql://106.12.25.134:3306/practice
-jdbc.user = 用户名
-jdbc.password = 密码
-
-#c3p0
-jdbc.maxPoolSize=50
-jdbc.minPoolSize=10
-jdbc.maxStatements=100
-jdbc.testConnection=true
-
-# 通用Mapper配置（插件+基础mapper接口）
-mapper.plugin = tk.mybatis.mapper.generator.MapperPlugin
-mapper.Mapper =com.siteqi.lib.MyBaseMapper
-</code></pre><p>generatorConfig.xml配置如下：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;!DOCTYPE generatorConfiguration
-        PUBLIC &quot;-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN&quot;
-        &quot;http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd&quot;&gt;
-
-&lt;generatorConfiguration&gt;
-    &lt;!--读取数据库连接池-&gt;
-    &lt;properties resource=&quot;generator/config.properties&quot;/&gt; 
-
-    &lt;context id=&quot;Mysql&quot; targetRuntime=&quot;MyBatis3Simple&quot; defaultModelType=&quot;flat&quot;&gt;
-        &lt;!--配置是否使用通用 Mapper 自带的注释扩展，默认 true--&gt;
-        &lt;!--&lt;property name=&quot;useMapperCommentGenerator&quot; value=&quot;false&quot;/&gt;--&gt;
-        &lt;property name=&quot;javaFileEncoding&quot; value=&quot;UTF-8&quot;/&gt;
-        &lt;property name=&quot;beginningDelimiter&quot; value=&quot;`&quot;/&gt;
-        &lt;property name=&quot;endingDelimiter&quot; value=&quot;`&quot;/&gt;
-
-        &lt;!--通用 Mapper 插件，生成的mapper接口继承通用接口--&gt;
-        &lt;plugin type=&quot;${mapper.plugin}&quot;&gt;
-            &lt;property name=&quot;mappers&quot; value=&quot;${mapper.Mapper}&quot;/&gt;
-        &lt;/plugin&gt;
-
-        &lt;jdbcConnection driverClass=&quot;${jdbc.driverClass}&quot; connectionURL=&quot;${jdbc.url}&quot; userId=&quot;${jdbc.user}&quot; password=&quot;${jdbc.password}&quot;/&gt;
-        &lt;!--确定model,mapper.xml,mapper接口的位置--&gt;
-        &lt;javaModelGenerator targetPackage=&quot;${targetModelPackage}&quot; targetProject=&quot;${targetJavaProject}&quot;/&gt;
-        &lt;sqlMapGenerator targetPackage=&quot;${targetXMLPackage}&quot; targetProject=&quot;${targetResourcesProject}&quot;/&gt;
-        &lt;javaClientGenerator targetPackage=&quot;${targetMapperPackage}&quot; targetProject=&quot;${targetJavaProject}&quot; type=&quot;XMLMAPPER&quot; /&gt;
-
-        &lt;!--&lt;table tableName=&quot;%&quot; &gt; 生成所有表--&gt;
-        &lt;!--domainObjectName生成实体别名--&gt;
-        &lt;table tableName=&quot;tb_movie&quot; domainObjectName=&quot;Movie&quot;&gt;
-            &lt;generatedKey column=&quot;id&quot; sqlStatement=&quot;Mysql&quot; identity=&quot;true&quot;/&gt;
-        &lt;/table&gt;
-    &lt;/context&gt;
-&lt;/generatorConfiguration&gt;
-</code></pre><p>application.yml配置如下：</p>
-<pre><code>mybatis:
- configuration:
-    #驼峰规则
-    map-underscore-to-camel-case: true
-    #生成的mapper.xml位置
- mapper-locations:  classpath*:mappers/*.xml
-</code></pre><p>基础mapper接口：</p>
-<pre><code>public interface MyBaseMapper&lt;T&gt; extends BaseMapper&lt;T&gt; {
-}
-</code></pre><hr>
-<h2 id="代码生成"><a href="#代码生成" class="headerlink" title="代码生成"></a>代码生成</h2><p>因为配置自动生成的maven插件，可直接运行其生成相应代码和xml<br>如下图：<br><img src="/2018/12/24/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-si/20181224234302.png" alt="image"><br>生成代码如下图：<br><img src="/2018/12/24/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-si/20181224234609.png" alt="image"></p>
+<h2 id="application-yml配置数据源连接"><a href="#application-yml配置数据源连接" class="headerlink" title="application.yml配置数据源连接"></a>application.yml配置数据源连接</h2><pre><code>spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      max-active: 80
+      initialSize: 5
+      minIdle: 8
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT &#39;x&#39;
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: false
+      maxPoolPreparedStatementPerConnectionSize: 20
+      removeAbandoned: true
+      removeAbandonedTimeoutMillis: 20000
+      logAbandoned: true
+      logDifferentThread: true
+      filters: wall,stat
+      connectionProperties:  druid.stat.mergeSql=true;druid.stat.logSlowSql=true;druid.stat.slowSqlMillis=3000
+      useGlobalDataSourceStat: true
+    master:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.jdbc.Driver
+      #spring boot 2.0默认使用hariki数据库连接池，所以配置url使用jdbc-url
+      url: jdbc:mysql://106.12.25.134:3306/practice?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false
+      username: 用户名
+      password: 密码
+    slave:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://106.12.25.134:3306/blog?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false
+      username: 用户名
+      password: 密码
+</code></pre><p>==注意：spring boot 2.0默认的数据库连接池是hariki==</p>
 <hr>
-<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>测试代码：</p>
-<pre><code>@RestController
-@RequestMapping(&quot;/movie&quot;)
-public class MovieController {
-    @Autowired
-    private MovieService movieService;
-    @GetMapping(&quot;/list&quot;)
-    public List&lt;MovieVO&gt; getMovies(){
-        List&lt;MovieVO&gt; movieVOList=movieService.getMovies();
-        return movieVOList;
+<h2 id="DBTypeEnum"><a href="#DBTypeEnum" class="headerlink" title="DBTypeEnum"></a>DBTypeEnum</h2><p>用一个枚举列出所有数据源，用于后面的配置。</p>
+<pre><code>/**
+ * db数据源名称
+ *
+ * @author wangmaoyu
+ * @create 2018-12-27 23:03
+ **/
+public enum DbTypeEnum {
+    master(&quot;dataSource_master&quot;),slave(&quot;dataSource_slave&quot;);
+    private String value;
+
+    public String getValue() {
+        return value;
     }
+
+    DbTypeEnum(String value) {
+        this.value = value;
+    }
+
 }
+</code></pre><hr>
+<h2 id="DbContextHolder"><a href="#DbContextHolder" class="headerlink" title="DbContextHolder"></a>DbContextHolder</h2><p>DbContextHolder当前线程所持有的数据源。</p>
+<pre><code>/**
+ * 保存一个线程安全的DatabaseType容器
+ *
+ * @author wangmaoyu
+ * @create 2018-12-25 23:57
+ **/
+@Slf4j
+public class DbContextHolder {
 
-</code></pre><pre><code>@Service
-public class MovieServiceImpl implements MovieService {
-    @Autowired
-    private MovieMapper movieMapper;
+    private static final ThreadLocal&lt;String&gt; contextHolder = new ThreadLocal&lt;&gt;();
 
+    /**
+     * 设置数据源
+     * @param dbTypeEnum
+     */
+    public static void setDb(DbTypeEnum dbTypeEnum){
+        log.debug(&quot;切换到{}数据源&quot;, dbTypeEnum.getValue());
+        contextHolder.set(dbTypeEnum.getValue());
+
+    }
+
+    /**
+     * 取得数据源
+     * @return
+     */
+    public static  String getDb(){
+        return contextHolder.get();
+    }
+
+    /**
+     * 清除数据源
+     */
+    public static void clearDb(){
+        contextHolder.remove();
+    }
+
+}
+</code></pre><hr>
+<h2 id="DynamicDataSource"><a href="#DynamicDataSource" class="headerlink" title="DynamicDataSource"></a>DynamicDataSource</h2><p>DynamicDataSource继承AbstractRoutingDataSource，并重写其中的方法determineCurrentLookupKey()，在该方法中使用DbContextHolder获取当前线程的数据源。</p>
+<pre><code>/**
+ * 动态数据源
+ *
+ * @author wangmaoyu
+ * @create 2018-12-25 23:54
+ **/
+@Slf4j
+public class DynamicDataSource extends AbstractRoutingDataSource {
     @Override
-    public List&lt;MovieVO&gt; getMovies() {
-        return movieMapper.selectAll().stream().map(MovieVO::new).collect(Collectors.toList());
+    protected Object determineCurrentLookupKey() {
+        log.debug(&quot;数据源为{}&quot;, DbContextHolder.getDb());
+        return DbContextHolder.getDb();
     }
 }
+</code></pre><hr>
+<h2 id="DBConfig"><a href="#DBConfig" class="headerlink" title="DBConfig"></a>DBConfig</h2><p>DBConfig多数据源配置</p>
+<pre><code>/**
+ * 多数据源配置
+ *
+ * @author wangmaoyu
+ * @create 2018-12-25 23:45
+ **/
+@Configuration
+//@EnableConfigurationProperties(value = {MasterDBProperties.class,SlaveDBProperties.class})
+public class DBConfig   {
+    /**
+     * 动态数据源
+     * @return
+     */
+    @Bean
+    @Primary
+    public DynamicDataSource dynamicDataSource() {
+        DynamicDataSource dynamicDataSource=new DynamicDataSource();
+        dynamicDataSource.setTargetDataSources(ImmutableMap.of(&quot;dataSource_master&quot;,datasourceMaster(),&quot;dataSource_slave&quot;,datasourceSlave()));
+        dynamicDataSource.setDefaultTargetDataSource(datasourceMaster());
+        return  dynamicDataSource;
+    }
 
-</code></pre><p>测试效果如图：<br><img src="/2018/12/24/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-si/20181224235207.png" alt="image"></p>
+    /**
+     * 主数据库
+     * @return
+     */
+    @Bean(&quot;datasourceMaster&quot;)
+    @ConfigurationProperties(prefix = &quot;spring.datasource.master&quot;)
+    public DataSource datasourceMaster(){
+         return DruidDataSourceBuilder.create().build(); //druid数据库
+        //return DataSourceBuilder.create().build(); //默认数据库 注意配置文件url
+    }
+
+    /**
+     * 副数据库
+     * @return
+     */
+    @Bean(&quot;datasourceSlave&quot;)
+    @ConfigurationProperties(prefix = &quot;spring.datasource.slave&quot;)
+    public DataSource datasourceSlave() {
+        return DruidDataSourceBuilder.create().build();
+        //return DataSourceBuilder.create().build();
+    }
+</code></pre><p>==注意：@EnableConfigurationProperties这个注解的作用是将@Configuration注解的类能够@autowired注入其它类里==</p>
+<hr>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><pre><code>public List&lt;Student&gt; getStudents() {
+        DbContextHolder.clearDb();
+        DbContextHolder.setDb(DbTypeEnum.slave);
+        System.out.println(&quot;******&quot; + DbContextHolder.getDb());
+        return studentMapper.selectAll();
+    }
+</code></pre><p>只需要DbContextHolder.setDb(DbTypeEnum.slave);就能切换当前线程的数据源</p>
+<hr>
+<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><p>注意：以上这种方式配置的多数据源不支持同时往两个库的两张表里更新数据的事务，如果要实现这种情况还需另外考虑，可参考xa分布式事务。</p>
 
             </div>
             <hr>
@@ -713,7 +736,7 @@ public class MovieServiceImpl implements MovieService {
                     <span class="reprint-tip">转载请注明: </span>
                     <a href="http://yoursite.com" class="b-link-green">Coder的欢乐时光</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/2018/12/24/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-si/" class="b-link-green">从零开始搭建spring boot脚手架（四）</a>
+                    <a href="/2019/01/08/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-wu/" class="b-link-green">从零开始搭建spring boot脚手架（五）</a>
                 </p>
             </div>
         </div>
@@ -757,7 +780,7 @@ public class MovieServiceImpl implements MovieService {
     <div class="row article-row">
         
         <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge left-badge text-color">上一篇</div>
+            <div class="article-badge left-badge text-color">本篇</div>
             <div class="card">
                 <a href="/2019/01/08/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-wu/">
                     <div class="card-image">
@@ -777,9 +800,9 @@ application.yml配置数据源连接spring:
   datasource:
  </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-01-08
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-01-08
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -796,6 +819,7 @@ application.yml配置数据源连接spring:
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -820,27 +844,25 @@ application.yml配置数据源连接spring:
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">下一篇</div>
             <div class="card">
-                <a href="/2018/12/17/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-san/">
+                <a href="/2018/12/24/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-si/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="从零开始搭建spring boot脚手架（三）">
+                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="从零开始搭建spring boot脚手架（四）">
                         
-                        <span class="card-title">从零开始搭建spring boot脚手架（三）</span>
+                        <span class="card-title">从零开始搭建spring boot脚手架（四）</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary">
-本篇主要讲述如何使用druid连接mysql，并用jdbcTemplate做测试。
+这篇文章主要讲如何用spring boot如何集成mybatis，同时生成通用mapper,省去了xml,do，mapper接口的创建。
 
 
-druid配置application.yml配置文件如下：
-spring:
-  datasource:
-    type: com.alibaba.d</div>
+需要引入的依赖&lt;dependency&gt;
+    &lt;groupId&gt;tk.</div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2018-12-17
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2018-12-24
                             </span>
                         <span class="publish-author">
                             
@@ -869,12 +891,16 @@ spring:
                         <span class="chip bg-color">脚手架</span>
                     </a>
                     
-                    <a href="/tags/druid/" target="_blank">
-                        <span class="chip bg-color">druid</span>
+                    <a href="/tags/mybatis/" target="_blank">
+                        <span class="chip bg-color">mybatis</span>
                     </a>
                     
-                    <a href="/tags/jdbcTemplate/" target="_blank">
-                        <span class="chip bg-color">jdbcTemplate</span>
+                    <a href="/tags/通用mapper/" target="_blank">
+                        <span class="chip bg-color">通用mapper</span>
+                    </a>
+                    
+                    <a href="/tags/自动生成/" target="_blank">
+                        <span class="chip bg-color">自动生成</span>
                     </a>
                     
                 </div>

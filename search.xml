@@ -3,6 +3,35 @@
   
     
     <entry>
+      <title>从零开始搭建spring boot脚手架（五）</title>
+      <link href="/2019/01/08/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-wu/"/>
+      <url>/2019/01/08/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-wu/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>这篇博客主要讲在spring boot如何配置多数据源，这里的多数据源主要是读写分离，至于读写分离的内容有时间慢慢研究。主要通过以下内容配置：</p></blockquote><hr><h2 id="application-yml配置数据源连接"><a href="#application-yml配置数据源连接" class="headerlink" title="application.yml配置数据源连接"></a>application.yml配置数据源连接</h2><pre><code>spring:  datasource:    type: com.alibaba.druid.pool.DruidDataSource    druid:      max-active: 80      initialSize: 5      minIdle: 8      maxWait: 60000      timeBetweenEvictionRunsMillis: 60000      minEvictableIdleTimeMillis: 300000      validationQuery: SELECT &#39;x&#39;      testWhileIdle: true      testOnBorrow: false      testOnReturn: false      poolPreparedStatements: false      maxPoolPreparedStatementPerConnectionSize: 20      removeAbandoned: true      removeAbandonedTimeoutMillis: 20000      logAbandoned: true      logDifferentThread: true      filters: wall,stat      connectionProperties:  druid.stat.mergeSql=true;druid.stat.logSlowSql=true;druid.stat.slowSqlMillis=3000      useGlobalDataSourceStat: true    master:      type: com.alibaba.druid.pool.DruidDataSource      driver-class-name: com.mysql.jdbc.Driver      #spring boot 2.0默认使用hariki数据库连接池，所以配置url使用jdbc-url      url: jdbc:mysql://106.12.25.134:3306/practice?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false      username: 用户名      password: 密码    slave:      type: com.alibaba.druid.pool.DruidDataSource      driver-class-name: com.mysql.jdbc.Driver      url: jdbc:mysql://106.12.25.134:3306/blog?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false      username: 用户名      password: 密码</code></pre><p>==注意：spring boot 2.0默认的数据库连接池是hariki==</p><hr><h2 id="DBTypeEnum"><a href="#DBTypeEnum" class="headerlink" title="DBTypeEnum"></a>DBTypeEnum</h2><p>用一个枚举列出所有数据源，用于后面的配置。</p><pre><code>/** * db数据源名称 * * @author wangmaoyu * @create 2018-12-27 23:03 **/public enum DbTypeEnum {    master(&quot;dataSource_master&quot;),slave(&quot;dataSource_slave&quot;);    private String value;    public String getValue() {        return value;    }    DbTypeEnum(String value) {        this.value = value;    }}</code></pre><hr><h2 id="DbContextHolder"><a href="#DbContextHolder" class="headerlink" title="DbContextHolder"></a>DbContextHolder</h2><p>DbContextHolder当前线程所持有的数据源。</p><pre><code>/** * 保存一个线程安全的DatabaseType容器 * * @author wangmaoyu * @create 2018-12-25 23:57 **/@Slf4jpublic class DbContextHolder {    private static final ThreadLocal&lt;String&gt; contextHolder = new ThreadLocal&lt;&gt;();    /**     * 设置数据源     * @param dbTypeEnum     */    public static void setDb(DbTypeEnum dbTypeEnum){        log.debug(&quot;切换到{}数据源&quot;, dbTypeEnum.getValue());        contextHolder.set(dbTypeEnum.getValue());    }    /**     * 取得数据源     * @return     */    public static  String getDb(){        return contextHolder.get();    }    /**     * 清除数据源     */    public static void clearDb(){        contextHolder.remove();    }}</code></pre><hr><h2 id="DynamicDataSource"><a href="#DynamicDataSource" class="headerlink" title="DynamicDataSource"></a>DynamicDataSource</h2><p>DynamicDataSource继承AbstractRoutingDataSource，并重写其中的方法determineCurrentLookupKey()，在该方法中使用DbContextHolder获取当前线程的数据源。</p><pre><code>/** * 动态数据源 * * @author wangmaoyu * @create 2018-12-25 23:54 **/@Slf4jpublic class DynamicDataSource extends AbstractRoutingDataSource {    @Override    protected Object determineCurrentLookupKey() {        log.debug(&quot;数据源为{}&quot;, DbContextHolder.getDb());        return DbContextHolder.getDb();    }}</code></pre><hr><h2 id="DBConfig"><a href="#DBConfig" class="headerlink" title="DBConfig"></a>DBConfig</h2><p>DBConfig多数据源配置</p><pre><code>/** * 多数据源配置 * * @author wangmaoyu * @create 2018-12-25 23:45 **/@Configuration//@EnableConfigurationProperties(value = {MasterDBProperties.class,SlaveDBProperties.class})public class DBConfig   {    /**     * 动态数据源     * @return     */    @Bean    @Primary    public DynamicDataSource dynamicDataSource() {        DynamicDataSource dynamicDataSource=new DynamicDataSource();        dynamicDataSource.setTargetDataSources(ImmutableMap.of(&quot;dataSource_master&quot;,datasourceMaster(),&quot;dataSource_slave&quot;,datasourceSlave()));        dynamicDataSource.setDefaultTargetDataSource(datasourceMaster());        return  dynamicDataSource;    }    /**     * 主数据库     * @return     */    @Bean(&quot;datasourceMaster&quot;)    @ConfigurationProperties(prefix = &quot;spring.datasource.master&quot;)    public DataSource datasourceMaster(){         return DruidDataSourceBuilder.create().build(); //druid数据库        //return DataSourceBuilder.create().build(); //默认数据库 注意配置文件url    }    /**     * 副数据库     * @return     */    @Bean(&quot;datasourceSlave&quot;)    @ConfigurationProperties(prefix = &quot;spring.datasource.slave&quot;)    public DataSource datasourceSlave() {        return DruidDataSourceBuilder.create().build();        //return DataSourceBuilder.create().build();    }</code></pre><p>==注意：@EnableConfigurationProperties这个注解的作用是将@Configuration注解的类能够@autowired注入其它类里==</p><hr><h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><pre><code>public List&lt;Student&gt; getStudents() {        DbContextHolder.clearDb();        DbContextHolder.setDb(DbTypeEnum.slave);        System.out.println(&quot;******&quot; + DbContextHolder.getDb());        return studentMapper.selectAll();    }</code></pre><p>只需要DbContextHolder.setDb(DbTypeEnum.slave);就能切换当前线程的数据源</p><hr><h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><p>注意：以上这种方式配置的多数据源不支持同时往两个库的两张表里更新数据的事务，如果要实现这种情况还需另外考虑，可参考xa分布式事务。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> spring boot </category>
+          
+          <category> 微服务 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> 脚手架 </tag>
+            
+            <tag> 多数据源，读写分离 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>从零开始搭建spring boot脚手架（四）</title>
       <link href="/2018/12/24/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-si/"/>
       <url>/2018/12/24/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-si/</url>
