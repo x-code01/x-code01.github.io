@@ -25,7 +25,9 @@
             
             <tag> 脚手架 </tag>
             
-            <tag> 多数据源，读写分离 </tag>
+            <tag> 多数据源 </tag>
+            
+            <tag> 读写分离 </tag>
             
         </tags>
       
