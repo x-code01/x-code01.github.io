@@ -5,7 +5,7 @@
 
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="从零开始搭建spring boot脚手架（五）, Coder的欢乐时光">
+    <meta name="keywords" content="从零开始搭建spring boot脚手架（六）, Coder的欢乐时光">
     <meta name="description" content="
 这篇文章主要讲在spring boot里面如何配置mybatis plus和代码生成工具。mybatis plus 相关api使用会在以后更新。
 
@@ -18,7 +18,7 @@ spring boot集成mybatis这里延续多数据源的数据库配置，即数据�
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>从零开始搭建spring boot脚手架（五） | Coder的欢乐时光</title>
+    <title>从零开始搭建spring boot脚手架（六） | Coder的欢乐时光</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -262,13 +262,13 @@ spring boot集成mybatis这里延续多数据源的数据库配置，即数据�
 
 
 
-<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/19.jpg')">
+<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        从零开始搭建spring boot脚手架（五）
+                        从零开始搭建spring boot脚手架（六）
                     </div>
                 </div>
             </div>
@@ -506,7 +506,7 @@ public class MpMapperScannerConfig {
         DbContextHolder.setDb(DbTypeEnum.master);
         return movieMapper.selectList(new QueryWrapper&lt;Movie&gt;().lambda().eq(Movie::getPx,&quot;1080p&quot;)).stream().map(MovieVO::new).collect(Collectors.toList());
     }
-</code></pre><p>效果:<br><img src="/2019/01/15/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-liu/20190115221324,png" alt="image"></p>
+</code></pre><p>效果:<br><img src="/2019/01/15/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-liu/20190115221324.png" alt="image"></p>
 <hr>
 <h2 id="自动生成工具"><a href="#自动生成工具" class="headerlink" title="自动生成工具"></a>自动生成工具</h2><p>工具类：</p>
 <pre><code>package com.siteqi.util;
@@ -749,7 +749,7 @@ public class CodeGenerator {
                     <span class="reprint-tip">转载请注明: </span>
                     <a href="http://yoursite.com" class="b-link-green">Coder的欢乐时光</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/2019/01/15/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-liu/" class="b-link-green">从零开始搭建spring boot脚手架（五）</a>
+                    <a href="/2019/01/15/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-liu/" class="b-link-green">从零开始搭建spring boot脚手架（六）</a>
                 </p>
             </div>
         </div>
@@ -799,9 +799,9 @@ public class CodeGenerator {
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="从零开始搭建spring boot脚手架（五）">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="从零开始搭建spring boot脚手架（六）">
                         
-                        <span class="card-title">从零开始搭建spring boot脚手架（五）</span>
+                        <span class="card-title">从零开始搭建spring boot脚手架（六）</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
