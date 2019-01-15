@@ -508,7 +508,19 @@ public class MpMapperScannerConfig {
     }
 </code></pre><p>效果:<br><img src="/2019/01/15/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-liu/20190115221324.png" alt="image"></p>
 <hr>
-<h2 id="自动生成工具"><a href="#自动生成工具" class="headerlink" title="自动生成工具"></a>自动生成工具</h2><p>工具类：</p>
+<h2 id="自动生成工具"><a href="#自动生成工具" class="headerlink" title="自动生成工具"></a>自动生成工具</h2><p>pom依赖引入：</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-plus-generator&lt;/artifactId&gt;
+    &lt;version&gt;3.0.5&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.velocity&lt;/groupId&gt;
+    &lt;artifactId&gt;velocity-engine-core&lt;/artifactId&gt;
+    &lt;version&gt;2.0&lt;/version&gt;
+    &lt;/dependency&gt;
+</code></pre><p>工具类：</p>
 <pre><code>package com.siteqi.util;
 
 import com.baomidou.mybatisplus.annotation.DbType;
