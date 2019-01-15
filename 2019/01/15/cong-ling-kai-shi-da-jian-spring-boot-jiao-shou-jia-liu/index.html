@@ -506,7 +506,7 @@ public class MpMapperScannerConfig {
         DbContextHolder.setDb(DbTypeEnum.master);
         return movieMapper.selectList(new QueryWrapper&lt;Movie&gt;().lambda().eq(Movie::getPx,&quot;1080p&quot;)).stream().map(MovieVO::new).collect(Collectors.toList());
     }
-</code></pre><p>效果:<br><img src="/2019/01/15/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-liu/20190115221324.png" alt="image"></p>
+</code></pre><p>效果:<br> <img src="/2019/01/15/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-liu/6-1.png" alt="image"></p>
 <hr>
 <h2 id="自动生成工具"><a href="#自动生成工具" class="headerlink" title="自动生成工具"></a>自动生成工具</h2><p>pom依赖引入：</p>
 <pre><code>&lt;dependency&gt;
