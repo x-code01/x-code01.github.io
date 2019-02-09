@@ -372,7 +372,599 @@ spring boot集成mybatis这里延续多数据源的数据库配置，即数据�
 </style>
 <div class="row">
     <div class="col s12 m12 l9">
+        <div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            
+            <div class="article-tag">
+                
+                <a href="/tags/java/" target="_blank">
+                    <span class="chip bg-color">java</span>
+                </a>
+                
+                <a href="/tags/脚手架/" target="_blank">
+                    <span class="chip bg-color">脚手架</span>
+                </a>
+                
+                <a href="/tags/多数据源/" target="_blank">
+                    <span class="chip bg-color">多数据源</span>
+                </a>
+                
+                <a href="/tags/Mybatis-Plus/" target="_blank">
+                    <span class="chip bg-color">Mybatis Plus</span>
+                </a>
+                
+                <a href="/tags/自动生成/" target="_blank">
+                    <span class="chip bg-color">自动生成</span>
+                </a>
+                
+            </div>
+            
+            <div class="post-info">
+                
+                <span class="post-cate">
+                    <i class="fa fa-bookmark fa-fw icon-category"></i>
+                    
+                    <a href="/categories/spring-boot/" class="post-category" target="_blank">
+                        spring boot
+                    </a>
+                    
+                    <a href="/categories/spring-boot/微服务/" class="post-category" target="_blank">
+                        微服务
+                    </a>
+                    
+                </span>
+                
+
+                <span class="post-date">
+                    <i class="fa fa-clock-o fa-fw"></i>2019-01-15
+                </span>
+            </div>
+        </div>
+        <hr>
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <blockquote>
+<p>这篇文章主要讲在spring boot里面如何配置mybatis plus和代码生成工具。mybatis plus 相关api使用会在以后更新。</p>
+</blockquote>
+<hr>
+<h2 id="spring-boot集成mybatis"><a href="#spring-boot集成mybatis" class="headerlink" title="spring boot集成mybatis"></a>spring boot集成mybatis</h2><pre><code>这里延续多数据源的数据库配置，即数据库连接请参考第五篇文章。
+</code></pre><p>1.pom引入：</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-plus-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;3.0.5&lt;/version&gt;
+    &lt;optional&gt;true&lt;/optional&gt;
+&lt;/dependency&gt;
+</code></pre><ol start="2">
+<li>application.yml配置如下：</li>
+</ol>
+<pre><code>mybatis-plus:
+  #xml扫描位置
+  mapper-locations: classpath*:mappers/*.xml
+  #实体类扫描位置
+  type-aliases-package: com.jinzonglv.web.model
+  global-config:
+    db-config:
+      #可选值：AUTO（数据库自增）、INPUT(自行输入)、ID_WORKER（分布式全局唯一ID）、UUID（32位UUID字符串）、ID_WORKER_STR（分布式全局唯一ID 字符串类型）
+      id-type: AUTO
+      #字段策略  default:&quot;默认&quot;,ignored:&quot;忽略判断&quot;,not_null:&quot;非 NULL 判断&quot;),not_empty:&quot;非空判断&quot;
+      field-strategy: ignored
+      db-type: mysql
+      #全局表前缀 tb_
+      table-prefix: tb_
+      #数据库大写下划线转换
+      #capital-mode: true
+      #逻辑删除配置（下面3个配置）
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+    #是否自动刷新 Mapper 对应的 XML 文件,生产不建议开启
+    refresh: true
+  configuration:
+      map-underscore-to-camel-case: true
+      cache-enabled: false
+</code></pre><ol start="3">
+<li>mybatis plus mapper基础接口</li>
+</ol>
+<pre><code>public interface MpBaseMapper&lt;T&gt; extends BaseMapper&lt;T&gt; {}
+</code></pre><ol start="4">
+<li>mybatis plus mapper扫描配置类：</li>
+</ol>
+<pre><code>/**
+ * mapper扫描
+ *
+ * @author wangmaoyu
+ * @create 2018-12-21 23:37
+ **/
+@Configuration
+public class MpMapperScannerConfig {
+    @Bean
+    public MapperScannerConfigurer mapperScannerConfigurer() {
+        MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
+        mapperScannerConfigurer.setSqlSessionFactoryBeanName(&quot;sqlSessionFactory&quot;);
+        mapperScannerConfigurer.setBasePackage(&quot;com.siteqi.web.mapper&quot;);//扫描该路径下的dao
+        Properties properties = new Properties();
+        properties.setProperty(&quot;mappers&quot;, &quot;com.siteqi.lib.MpBaseMapper&quot;);//通用mapper
+        properties.setProperty(&quot;notEmpty&quot;, &quot;false&quot;);
+        properties.setProperty(&quot;IDENTITY&quot;, &quot;MYSQL&quot;);
+        mapperScannerConfigurer.setProperties(properties);
+        return mapperScannerConfigurer;
+    }
+}
+
+</code></pre><ol start="5">
+<li>使用 </li>
+</ol>
+<pre><code>public List&lt;MovieVO&gt; getMovies() {
+        DbContextHolder.setDb(DbTypeEnum.master);
+        return movieMapper.selectList(new QueryWrapper&lt;Movie&gt;().lambda().eq(Movie::getPx,&quot;1080p&quot;)).stream().map(MovieVO::new).collect(Collectors.toList());
+    }
+</code></pre><p>效果:<br> <img src="/2019/01/15/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-liu/6-1.png" alt="image"></p>
+<hr>
+<h2 id="自动生成工具"><a href="#自动生成工具" class="headerlink" title="自动生成工具"></a>自动生成工具</h2><p>pom依赖引入：</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-plus-generator&lt;/artifactId&gt;
+    &lt;version&gt;3.0.5&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.velocity&lt;/groupId&gt;
+    &lt;artifactId&gt;velocity-engine-core&lt;/artifactId&gt;
+    &lt;version&gt;2.0&lt;/version&gt;
+    &lt;/dependency&gt;
+</code></pre><p>工具类：</p>
+<pre><code>package com.siteqi.util;
+
+import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.generator.AutoGenerator;
+import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import com.siteqi.enums.DbTypeEnum;
+
+import java.util.*;
+
+/**
+ * MP代码生成器
+ *
+ * @author wangmaoyu
+ * @create 2019-01-14 20:13
+ **/
+public class CodeGenerator {
+    public static  void  generate(String dbUrl){
+
+        System.out.println(&quot;请输入需要生成的表明(每个表以‘,’号结尾：&quot;);
+        Scanner scanner = new Scanner(System.in);
+        String tableNames=null;
+        if (scanner.hasNext()){
+            tableNames=scanner.next();
+        }
+        List&lt;String&gt; tables=new ArrayList&lt;&gt;();
+        /*String[] tablesArr=tableNames.split(&quot;,&quot;);
+        tables.addAll(Arrays.asList(tablesArr));*/
+        Collections.addAll(tables, tableNames.split(&quot;,&quot;));
+        System.out.println(&quot;你输入了以下表名：&quot;);
+        tables.stream().forEach(t-&gt; System.out.println(t));
+
+        AutoGenerator autoGenerator = new AutoGenerator();
+
+
+        //全局配置
+        GlobalConfig globalConfig = new GlobalConfig();
+        globalConfig.setOutputDir(&quot;G://dataZone/codeGenerate&quot;);
+        globalConfig.setFileOverride(true);
+        globalConfig.setActiveRecord(true);//不需要ActiveRecord特性的请改为false
+        globalConfig.setEnableCache(false);//XML二级缓存
+        globalConfig.setBaseResultMap(true);//XML ResultMap
+        globalConfig.setBaseColumnList(false);//XML columList
+        globalConfig.setAuthor(&quot;wangmaoyu&quot;);//作者
+
+        //自定义文件命名，注意%s 会自动填充表实体属性
+        globalConfig.setControllerName(&quot;%sController&quot;);
+        globalConfig.setServiceName(&quot;%sService&quot;);
+        globalConfig.setServiceImplName(&quot;%sServiceImpl&quot;);
+        globalConfig.setMapperName(&quot;%sMapper&quot;);
+        globalConfig.setXmlName(&quot;%sMapper&quot;);
+        autoGenerator.setGlobalConfig(globalConfig);
+
+        //数据源配置
+        DataSourceConfig dataSourceConfig = new DataSourceConfig();
+        dataSourceConfig.setDbType(DbType.MYSQL);
+        dataSourceConfig.setDriverName(&quot;com.mysql.jdbc.Driver&quot;);
+        dataSourceConfig.setUsername(&quot;root&quot;);
+        dataSourceConfig.setPassword(&quot;root1&quot;);
+        dataSourceConfig.setUrl(dbUrl);
+        autoGenerator.setDataSource(dataSourceConfig);
+
+        //策略配置
+        StrategyConfig strategyConfig = new StrategyConfig();
+        strategyConfig.setTablePrefix(&quot;tb_&quot;);//此处可以修改您的表前缀
+        strategyConfig.setNaming(NamingStrategy.underline_to_camel);//表名生成策略
+        strategyConfig.setColumnNaming(NamingStrategy.underline_to_camel);//字段生成策略
+        strategyConfig.setEntityLombokModel(true);
+        strategyConfig.setRestControllerStyle(true);
+        strategyConfig.setInclude(tables.toArray(new String[tables.size()]));//需要生成的表
+        strategyConfig.setSuperControllerClass(null);
+        strategyConfig.setSuperServiceClass(null);
+        strategyConfig.setSuperServiceImplClass(null);
+        strategyConfig.setSuperMapperClass(null);
+        autoGenerator.setStrategy(strategyConfig);
+
+        //包配置
+        PackageConfig packageConfig = new PackageConfig();
+        packageConfig.setParent(&quot;com.siteqi.web&quot;);
+        packageConfig.setController(&quot;controller&quot;);
+        packageConfig.setService(&quot;service&quot;);
+        packageConfig.setServiceImpl(&quot;serviceImpl&quot;);
+        packageConfig.setMapper(&quot;mapper&quot;);
+        packageConfig.setEntity(&quot;model&quot;);
+        packageConfig.setXml(&quot;xml&quot;);
+        autoGenerator.setPackageInfo(packageConfig);
+
+        TemplateConfig templateConfig = new TemplateConfig();
+        templateConfig.setXml(null);
+        autoGenerator.setTemplate(templateConfig);
+        autoGenerator.setTemplateEngine(new FreemarkerTemplateEngine());
+
+
+        autoGenerator.execute();
+
+    }
+    public static void main(String[] args) {
+        CodeGenerator.generate(DbTypeEnum.master_url.getValue());
+    }
+}
+
+</code></pre>
+            </div>
+            <hr>
+
+            
+            <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.88rem;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff;
+        background-color: #22AB38;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff;
+        background-color: #019FE8;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a class="reward-link btn-floating btn-large waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close"><i class="fa fa-close"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs">
+                        <li class="tab wechat-tab waves-effect waves-light"><a class="active" href="#wechat">微信</a></li>
+                        <li class="tab alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                    </ul>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#reward .reward-link').on('click', function () {
+            $('#rewardModal').openModal();
+        });
+
+        $('#rewardModal .close').on('click', function () {
+            $('#rewardModal').closeModal();
+        });
+    });
+</script>
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            <div class="reprint">
+                <p>
+                    <span class="reprint-tip">转载请注明: </span>
+                    <a href="http://yoursite.com" class="b-link-green">Coder的欢乐时光</a>
+                    <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
+                    <a href="/2019/01/15/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-liu/" class="b-link-green">从零开始搭建spring boot脚手架（六）</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+    <div class="livere-card card" data-aos="fade-up">
+    <!-- 来必力City版安装代码 -->
+    <div id="lv-container" class="card-content" data-id="city" data-uid="MTAyMC80MTYyMC8xODE2Nw==">
+        <script type="text/javascript">
+            (function (d, s) {
+                let j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') {
+                    return;
+                }
+
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript。</noscript>
+    </div>
+    <!-- City版安装代码已完成 -->
+</div>
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
         
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">上一篇</div>
+            <div class="card">
+                <a href="/2019/01/15/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-liu/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="从零开始搭建spring boot脚手架（六）">
+                        
+                        <span class="card-title">从零开始搭建spring boot脚手架（六）</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary">
+这篇文章主要讲在spring boot里面如何配置mybatis plus和代码生成工具。mybatis plus 相关api使用会在以后更新。
+
+
+spring boot集成mybatis这里延续多数据源的数据库配置，即数据库连接请参考</div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-01-15
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/spring-boot/" class="post-category" target="_blank">
+                                    spring boot
+                                </a>
+                            
+                            <a href="/categories/spring-boot/微服务/" class="post-category" target="_blank">
+                                    微服务
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/java/" target="_blank">
+                        <span class="chip bg-color">java</span>
+                    </a>
+                    
+                    <a href="/tags/脚手架/" target="_blank">
+                        <span class="chip bg-color">脚手架</span>
+                    </a>
+                    
+                    <a href="/tags/多数据源/" target="_blank">
+                        <span class="chip bg-color">多数据源</span>
+                    </a>
+                    
+                    <a href="/tags/Mybatis-Plus/" target="_blank">
+                        <span class="chip bg-color">Mybatis Plus</span>
+                    </a>
+                    
+                    <a href="/tags/自动生成/" target="_blank">
+                        <span class="chip bg-color">自动生成</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">下一篇</div>
+            <div class="card">
+                <a href="/2019/01/08/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-wu/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="从零开始搭建spring boot脚手架（五）">
+                        
+                        <span class="card-title">从零开始搭建spring boot脚手架（五）</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary">
+这篇博客主要讲在spring boot如何配置多数据源，这里的多数据源主要是读写分离，至于读写分离的内容有时间慢慢研究。主要通过以下内容配置：
+
+
+application.yml配置数据源连接spring:
+  datasource:
+ </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-01-08
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/spring-boot/" class="post-category" target="_blank">
+                                    spring boot
+                                </a>
+                            
+                            <a href="/categories/spring-boot/微服务/" class="post-category" target="_blank">
+                                    微服务
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/java/" target="_blank">
+                        <span class="chip bg-color">java</span>
+                    </a>
+                    
+                    <a href="/tags/脚手架/" target="_blank">
+                        <span class="chip bg-color">脚手架</span>
+                    </a>
+                    
+                    <a href="/tags/多数据源/" target="_blank">
+                        <span class="chip bg-color">多数据源</span>
+                    </a>
+                    
+                    <a href="/tags/读写分离/" target="_blank">
+                        <span class="chip bg-color">读写分离</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + 'from: Coder的欢乐时光<br />'
+            + 'author: wang maoyu<br />'
+            + 'link: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
     </div>
     <div class="col l3 hide-on-med-and-down">
         <div class="toc-widget">
