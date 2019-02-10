@@ -487,24 +487,16 @@ header .go-back i {
     margin-top: -40px;
 }
 
-.dream {
-    margin-top: 20px;
-    margin-bottom: 40px;
+.music {
+    margin-bottom: 30px !important;
 }
 
-.dream .title {
-    font-size: 2rem;
-    margin-bottom: 20px;
+.notice {
+    margin-top: -40px;
 }
 
-.dream .text {
-    opacity: .6;
-    font-size: 1.1rem;
-}
-
-.music-player {
-    margin-top: 10px;
-    margin-bottom: 60px;
+.notice .card {
+    border-radius: 5px;
 }
 
 #recommend-sections {
@@ -517,6 +509,11 @@ header .go-back i {
 }
 
 @media only screen and (min-width: 1418px) {
+    .notice {
+        margin-top: 30px;
+        padding: 0 0.75rem;
+    }
+
     .recommend {
         margin-top: 20px;
         padding: 0 0.75rem;
@@ -672,14 +669,9 @@ article .card {
     border-radius: 10px;
 }
 
-article .card-image {
-    background-color: #222;
-}
-
 article .card-image img {
     height: 220px;
     border-radius: 0.3rem;
-    opacity: .7;
 }
 
 article .tag-image img {
@@ -694,7 +686,6 @@ article .article-content .summary {
     padding-bottom: 2px;
     padding-left: 0;
     margin-bottom: 6px;
-    word-break: break-all;
 }
 
 article .article-content .publish-author {
@@ -1686,25 +1677,20 @@ footer .copy-right {
 }
 
 .img-shadow {
-    box-shadow: 0 5px 25px 0 rgba(0,0,0,.2), 0 10px 30px -11px rgba(0,0,0,.6)
+  box-shadow: 0 0 30px 1px #999;
 }
 
 .img-margin {
-    margin: 25px auto 10px auto;
-}
-
-.caption {
-    text-align: center;
-    margin: 0 auto 15px auto;
+  margin: 25px auto 15px auto;
 }
 
 .center-caption {
-    color: #525f7f;
-    padding: 5px;
-    border-bottom: 1px solid #d9d9d9;
+  color: #5f5f5f;
+  padding: 10px;
+  border-bottom: 1px solid #d9d9d9;
 }
 
-.lg-sub-html .center-caption {
-    color: #fff !important;
-    border-bottom: none;
+.caption {
+  text-align: center;
+  margin: 0 auto 15px auto;
 }
