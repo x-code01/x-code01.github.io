@@ -3,6 +3,35 @@
   
     
     <entry>
+      <title>LinkedList源码学习</title>
+      <link href="/2019/02/11/linkedlist-yuan-ma-xue-xi/"/>
+      <url>/2019/02/11/linkedlist-yuan-ma-xue-xi/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><blockquote><p>LinkedList作为List接口的另一种实现，与ArrayList形成互补关系，增删快，查改慢。</p></blockquote><hr><h2 id="为什么要用LinkedList"><a href="#为什么要用LinkedList" class="headerlink" title="为什么要用LinkedList?"></a>为什么要用LinkedList?</h2><ol><li>LinkedList 是线程不安全的，允许元素为null的双向链表。</li><li>它实现了Deque<e>,所以它也可以作为一个双端队列。和ArrayList比，没有实现RandomAccess所以其以下标，随机访问元素速度较慢。</e></li><li>因其底层数据结构是链表，所以可想而知，它的增删只需要移动指针即可，故时间效率较高。不需要批量扩容，也不需要预留空间，所以空间效率比ArrayList高。</li></ol><hr><h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><ul><li>成员变量及构造函数</li></ul><pre><code>transient int size = 0;transient Node&lt;E&gt; first; //链表头节点transient Node&lt;E&gt; last; //链表尾节点public LinkedList() {    }public LinkedList(Collection&lt;? extends E&gt; c) {  //调用     public boolean addAll(Collection&lt;? extends E&gt; c)  将集合c所有元素插入链表中        this();        addAll(c);    }</code></pre><ul><li>节点结构</li></ul><pre><code>private static class Node&lt;E&gt; {        E item; //元素值        Node&lt;E&gt; next; //后置节点        Node&lt;E&gt; prev; //前置节点        Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) {            this.item = element;            this.next = next;            this.prev = prev;        }    }</code></pre><ul><li>单个增加元素 add()</li></ul><pre><code> public boolean add(E e) { //在尾部插入一个节点： add        linkLast(e);        return true;    } void linkLast(E e) { //生成新节点 并插入到 链表尾部， 更新 last/first 节点。        final Node&lt;E&gt; l = last; //记录原尾部节点        final Node&lt;E&gt; newNode = new Node&lt;&gt;(l, e, null);  //以原尾部节点为新节点的前置节点        last = newNode; //更新尾部节点        if (l == null) //若原链表为空链表，需要额外更新头结点            first = newNode;        else            l.next = newNode; //更新尾部节点        size++; //修改size        modCount++;    }</code></pre><ul><li>指定位置添加元素add(int index, E element)</li></ul><pre><code> public void add(int index, E element) {        checkPositionIndex(index); //检查是否越界        if (index == size) /在尾节点后插入            linkLast(element);        else            linkBefore(element, node(index)); //在中间插入    } void linkBefore(E e, Node&lt;E&gt; succ) { //在当前节点succ前，插入一个新节点e        // assert succ != null;        final Node&lt;E&gt; pred = succ.prev; //保存后置节点的前置节点        final Node&lt;E&gt; newNode = new Node&lt;&gt;(pred, e, succ);  //以前置和后置节点和元素值e 构建一个新节点        succ.prev = newNode; //新节点new是原节点succ的前置节点        if (pred == null) //如果之前的前置节点是空，说明succ是原头结点。所以新节点是现在的头结点            first = newNode;        else //否则构建前置节点的后置节点为new            pred.next = newNode;        size++;        modCount++;    }</code></pre><ul><li>增加集合addAll(Collection&lt;? extends E&gt; c)</li></ul><pre><code>public boolean addAll(Collection&lt;? extends E&gt; c) { //在尾部批量增加        return addAll(size, c);    }public boolean addAll(int index, Collection&lt;? extends E&gt; c) {        checkPositionIndex(index); //检查是否越界        Object[] a = c.toArray();        int numNew = a.length;        if (numNew == 0) //如果新增元素数量为0，则不增加，并返回false            return false;        Node&lt;E&gt; pred, succ; //index节点的前置节点，后置节点        if (index == size) { //在链表尾部追加数据            succ = null; //size节点（队尾）的后置节点一定是null            pred = last; //前置节点是队尾        } else {            succ = node(index);//取出index节点，作为后置节点            pred = succ.prev;//前置节点是，index节点的前一个节点        }        for (Object o : a) { //链表批量增加，是靠for循环遍历原数组，依次执行插入节点操作。            @SuppressWarnings(&quot;unchecked&quot;) E e = (E) o;            Node&lt;E&gt; newNode = new Node&lt;&gt;(pred, e, null); //以前置节点 和 元素值e，构建new一个新节点            if (pred == null) //如果前置节点是空，说明是头结点                first = newNode;            else /否则 前置节点的后置节点设置问新节点                pred.next = newNode;            pred = newNode; //步进，当前的节点为前置节点了，为下次添加节点做准备        }        if (succ == null) { //循环结束后，判断，如果后置节点是null。 说明此时是在队尾append的。            last = pred; //则设置尾节点        } else {            pred.next = succ;// 否则是在队中插入的节点 ，更新前置节点 后置节点            succ.prev = pred;//更新后置节点的前置节点        }        size += numNew;        modCount++;        return true;    }//根据index 查询出Node，Node&lt;E&gt; node(int index) {    // assert isElementIndex(index);//通过下标获取某个node 的时候，（增、查 ），会根据index处于前半段还是后半段 进行一个折半，以提升查询效率    if (index &lt; (size &gt;&gt; 1)) {        Node&lt;E&gt; x = first;        for (int i = 0; i &lt; index; i++)            x = x.next;        return x;    } else {        Node&lt;E&gt; x = last;        for (int i = size - 1; i &gt; index; i--)            x = x.prev;        return x;    }}</code></pre><ul><li>删除指定位置的元素remove(int index)</li></ul><pre><code>public E remove(int index) {        checkElementIndex(index); //检查是否越界        return unlink(node(index));    }E unlink(Node&lt;E&gt; x) {        // assert x != null;        final E element = x.item; //当前节点的元素值        final Node&lt;E&gt; next = x.next; //当前节点的后置节点        final Node&lt;E&gt; prev = x.prev; //当前节点的前置节点        if (prev == null) { //如果前置节点为空(说明当前节点原本是头结点)            first = next; //则头结点等于后置节点         } else {            prev.next = next;            x.prev = null;//将当前节点的 前置节点置空        }        if (next == null) { //如果后置节点为空（说明当前节点原本是尾节点）            last = prev; //则尾节点为前置节点        } else {            next.prev = prev; //将当前节点的 后置节点置空            x.next = null;        }        x.item = null;        size--;        modCount++;        return element;    }</code></pre><ul><li>删除指定元素</li></ul><pre><code>public boolean remove(Object o) { //因为要考虑 null元素，也是分情况遍历        if (o == null) { //如果要删除的是null节点(从remove和add 里 可以看出，允许元素为null)            for (Node&lt;E&gt; x = first; x != null; x = x.next) { //遍历每个节点 对比                if (x.item == null) {                    unlink(x);                    return true;                }            }        } else {            for (Node&lt;E&gt; x = first; x != null; x = x.next) {                if (o.equals(x.item)) {                    unlink(x);                    return true;                }            }        }        return false;</code></pre><p>删也一定会修改modCount。 按下标删，也是先根据index找到Node，然后去链表上unlink掉这个Node。 按元素删，会先去遍历链表寻找是否有该Node，考虑到允许null值，所以会遍历两遍，然后再去unlink它。</p><ul><li>改set</li></ul><pre><code>public E set(int index, E element) {    checkElementIndex(index); //检查越界[0,size)    Node&lt;E&gt; x = node(index);//取出对应的Node    E oldVal = x.item;//保存旧值 供返回    x.item = element;//用新值覆盖旧值    return oldVal;//返回旧值}//改也是先根据index找到Node，然后替换值，改不修改modCount</code></pre><hr><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul><li>链表批量增加，是靠for循环遍历原数组，依次执行插入节点操作。对比ArrayList是通过System.arraycopy完成批量增加的。增加一定会修改modCount。</li><li><p>通过下标获取某个node 的时候，（add select），会根据index处于前半段还是后半段 进行一个折半，以提升查询效率</p></li><li><p>删也一定会修改modCount。 按下标删，也是先根据index找到Node，然后去链表上unlink掉这个Node。 按元素删，会先去遍历链表寻找是否有该Node，如果有，去链表上unlink掉这个Node。</p></li><li><p>改也是先根据index找到Node，然后替换值。改不修改modCount。<br>查本身就是根据index找到Node。</p></li><li>所以它的CRUD操作里，都涉及到根据index去找到Node的操作。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> java基础 </category>
+          
+          <category> 源码学习，集合 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> LinkedList </tag>
+            
+            <tag> JAVA8 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>ArrayList源码学习</title>
       <link href="/2019/01/23/arraylist-yuan-ma-xue-xi/"/>
       <url>/2019/01/23/arraylist-yuan-ma-xue-xi/</url>
@@ -23,9 +52,9 @@
             
             <tag> java </tag>
             
-            <tag> ArrayList </tag>
-            
             <tag> JAVA8 </tag>
+            
+            <tag> ArrayList </tag>
             
             <tag> 代码技巧 </tag>
             

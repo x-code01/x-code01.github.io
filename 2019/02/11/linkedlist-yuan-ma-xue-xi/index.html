@@ -5,16 +5,14 @@
 
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="从零开始搭建spring boot脚手架（二）, Coder的欢乐时光">
+    <meta name="keywords" content="LinkedList源码学习, Coder的欢乐时光">
     <meta name="description" content="
-spring boot相关的配置文件以及自定义配置的读取
+LinkedList作为List接口的另一种实现，与ArrayList形成互补关系，增删快，查改慢。
 
 
-自定义配置首先在application.yml文件里尝试一发自定义配置：
-my:
- name: wmy
- age: 25
-该如何读取这个配置呢？在spring boot中即可通">
+为什么要用LinkedList?
+LinkedList 是线程不安全的，允许元素为null的双向链表。
+它实现了Deque,所以它也">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -22,7 +20,7 @@ my:
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>从零开始搭建spring boot脚手架（二） | Coder的欢乐时光</title>
+    <title>LinkedList源码学习 | Coder的欢乐时光</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -266,13 +264,13 @@ my:
 
 
 
-<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
+<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/18.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        从零开始搭建spring boot脚手架（二）
+                        LinkedList源码学习
                     </div>
                 </div>
             </div>
@@ -389,16 +387,12 @@ my:
                                 <span class="chip bg-color">java</span>
                             </a>
                         
-                            <a href="/tags/脚手架/" target="_blank">
-                                <span class="chip bg-color">脚手架</span>
+                            <a href="/tags/LinkedList/" target="_blank">
+                                <span class="chip bg-color">LinkedList</span>
                             </a>
                         
-                            <a href="/tags/配置/" target="_blank">
-                                <span class="chip bg-color">配置</span>
-                            </a>
-                        
-                            <a href="/tags/打包/" target="_blank">
-                                <span class="chip bg-color">打包</span>
+                            <a href="/tags/JAVA8/" target="_blank">
+                                <span class="chip bg-color">JAVA8</span>
                             </a>
                         
                     </div>
@@ -409,12 +403,12 @@ my:
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/spring-boot/" class="post-category" target="_blank">
-                                spring boot
+                            <a href="/categories/java基础/" class="post-category" target="_blank">
+                                java基础
                             </a>
                         
-                            <a href="/categories/spring-boot/微服务/" class="post-category" target="_blank">
-                                微服务
+                            <a href="/categories/java基础/源码学习，集合/" class="post-category" target="_blank">
+                                源码学习，集合
                             </a>
                         
                     </div>
@@ -425,20 +419,20 @@ my:
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2018-12-13
+                    2019-02-11
                 </div>
 
                 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        854
+                        1.8k
                     </div>
                     
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        3 分
+                        7 分
                     </div>
                     
                 
@@ -455,127 +449,224 @@ my:
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <blockquote>
-<p>spring boot相关的配置文件以及自定义配置的读取</p>
+<p>LinkedList作为List接口的另一种实现，与ArrayList形成互补关系，增删快，查改慢。</p>
 </blockquote>
 <hr>
-<h2 id="自定义配置"><a href="#自定义配置" class="headerlink" title="自定义配置"></a>自定义配置</h2><p>首先在application.yml文件里尝试一发自定义配置：</p>
-<pre><code>my:
- name: wmy
- age: 25
-</code></pre><p>该如何读取这个配置呢？在spring boot中即可通过@Value注解来读取配置文件，试用一下：</p>
-<pre><code> @Value(&quot;${my.name}&quot;)
-    public String name;
-
-    @Value(&quot;${my.age}&quot;)
-    public String age;
-
-    @GetMapping(&quot;/value&quot;)
-    public Object testValue(){
-        Map map=new HashMap&lt;&gt;();
-        map.put(&quot;name&quot;,name);
-        map.put(&quot;age&quot;,age);
-        return map;
-    }
-</code></pre><p>在浏览器输入相应访问路径：</p>
-<pre><code>{
-name: &quot;wmy&quot;,
-age: &quot;25&quot;
-}
-</code></pre><p>如果配置过多，为了避免麻烦，我们可以将所有配置封装成一个实体类，这样每次要调用某个配置，我们只需实例化一个该类的对象即可。<br>yml文件配置如下：</p>
-<pre><code>my:
- name: wmy
- age: 25
- sex: 男
- job: 软件工程师
-</code></pre><p>建立与之对应的实体类（为了省略get,set方法，此处用了lombok)：</p>
-<pre><code>@ConfigurationProperties(prefix = &quot;my&quot;) // 这个注解将配置映射到实体类
-@Data
-@Component //不加，注入时显示无法注入，但是还是可以运行
-public class Person {
-    private String name;
-    private String age;
-    private String sex;
-    private String job;
-}
-</code></pre><p>测试：</p>
-<pre><code>  @Autowired
-    private Person person;
-
-    @GetMapping(&quot;/value&quot;)
-    public Object testValue(){
-        Map map=new HashMap&lt;&gt;();
-        map.put(&quot;name&quot;,person.getName());
-        map.put(&quot;age&quot;,person.getAge());
-        map.put(&quot;sex&quot;,person.getSex());
-        map.put(&quot;job&quot;,person.getJob());
-        return map;
-    }
-</code></pre><p>访问效果：</p>
-<pre><code>{
-sex: &quot;男&quot;,
-name: &quot;wmy&quot;,
-job: &quot;软件工程师&quot;,
-age: &quot;25&quot;
-}
-</code></pre><hr>
-<h2 id="自定义配置文件"><a href="#自定义配置文件" class="headerlink" title="自定义配置文件"></a>自定义配置文件</h2><p>如果配置文件太多，你想单独新建配置文件来放特殊需求的配置也行。<br>在resources下创建配置配置文件test.properties</p>
-<pre><code>com.test.name=wmy
-com.test.age=26
-com.test.sex=男
-com.test.job=软件工程师
-</code></pre><p>配置实体类：</p>
-<pre><code>@Configuration //或者@Component都可以不加
-@ConfigurationProperties(prefix = &quot;com.test&quot;) // 这个注解将配置映射到实体类
-@PropertySource(value = &quot;classpath:test.properties&quot;,encoding = &quot;gbk&quot;) //encoding控制编码
-@Data
-public class Person {
-    private String name;
-    private String age;
-    private String sex;
-    private String job;
-}
-
-</code></pre><p>感觉@Configuration就是为了标记这个类为配置类，好像专门拿来标记配置类，大佬可以解释下？<br>百度了一下，@Configuration和@Component还是有很大区别的。以后有时间研究。</p>
+<h2 id="为什么要用LinkedList"><a href="#为什么要用LinkedList" class="headerlink" title="为什么要用LinkedList?"></a>为什么要用LinkedList?</h2><ol>
+<li>LinkedList 是线程不安全的，允许元素为null的双向链表。</li>
+<li>它实现了Deque<e>,所以它也可以作为一个双端队列。和ArrayList比，没有实现RandomAccess所以其以下标，随机访问元素速度较慢。</e></li>
+<li>因其底层数据结构是链表，所以可想而知，它的增删只需要移动指针即可，故时间效率较高。不需要批量扩容，也不需要预留空间，所以空间效率比ArrayList高。</li>
+</ol>
 <hr>
-<h2 id="多环境配置文件"><a href="#多环境配置文件" class="headerlink" title="多环境配置文件"></a>多环境配置文件</h2><p> 如果你在相同优先级位置同时有application.properties和application.yml，那么application.yml里面的属性就会覆盖application.properties里的属性。所以，优先推荐使用yml格式的文件</p>
-<p>多环境配置文件一般分为以下几种：</p>
-<pre><code>application-test.yml：测试环境
-application-dev.yml：开发环境
-application-prod.yml：生产环境
-</code></pre><p>需要哪种直接在application.yml配置就行：</p>
-<pre><code>spring:
-  profiles:
-    active: dev
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><ul>
+<li>成员变量及构造函数</li>
+</ul>
+<pre><code>transient int size = 0;
+transient Node&lt;E&gt; first; //链表头节点
+transient Node&lt;E&gt; last; //链表尾节点
+public LinkedList() {
+    }
+public LinkedList(Collection&lt;? extends E&gt; c) {  //调用     public boolean addAll(Collection&lt;? extends E&gt; c)  将集合c所有元素插入链表中
+        this();
+        addAll(c);
+    }
+</code></pre><ul>
+<li>节点结构</li>
+</ul>
+<pre><code>private static class Node&lt;E&gt; {
+        E item; //元素值
+        Node&lt;E&gt; next; //后置节点
+        Node&lt;E&gt; prev; //前置节点
+
+        Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+</code></pre><ul>
+<li>单个增加元素 add()</li>
+</ul>
+<pre><code> public boolean add(E e) { //在尾部插入一个节点： add
+        linkLast(e);
+        return true;
+    }
+
+ void linkLast(E e) { //生成新节点 并插入到 链表尾部， 更新 last/first 节点。
+        final Node&lt;E&gt; l = last; //记录原尾部节点
+        final Node&lt;E&gt; newNode = new Node&lt;&gt;(l, e, null);  //以原尾部节点为新节点的前置节点
+        last = newNode; //更新尾部节点
+        if (l == null) //若原链表为空链表，需要额外更新头结点
+            first = newNode;
+        else
+            l.next = newNode; //更新尾部节点
+        size++; //修改size
+        modCount++;
+    }
+</code></pre><ul>
+<li>指定位置添加元素add(int index, E element)</li>
+</ul>
+<pre><code> public void add(int index, E element) {
+        checkPositionIndex(index); //检查是否越界
+
+        if (index == size) /在尾节点后插入
+            linkLast(element);
+        else
+            linkBefore(element, node(index)); //在中间插入
+    }
+
+ void linkBefore(E e, Node&lt;E&gt; succ) { //在当前节点succ前，插入一个新节点e
+        // assert succ != null;
+        final Node&lt;E&gt; pred = succ.prev; //保存后置节点的前置节点
+        final Node&lt;E&gt; newNode = new Node&lt;&gt;(pred, e, succ);  //以前置和后置节点和元素值e 构建一个新节点
+        succ.prev = newNode; //新节点new是原节点succ的前置节点
+        if (pred == null) //如果之前的前置节点是空，说明succ是原头结点。所以新节点是现在的头结点
+            first = newNode;
+        else //否则构建前置节点的后置节点为new
+            pred.next = newNode;
+        size++;
+        modCount++;
+    }
+</code></pre><ul>
+<li>增加集合addAll(Collection&lt;? extends E&gt; c)</li>
+</ul>
+<pre><code>public boolean addAll(Collection&lt;? extends E&gt; c) { //在尾部批量增加
+        return addAll(size, c);
+    }
+
+public boolean addAll(int index, Collection&lt;? extends E&gt; c) {
+        checkPositionIndex(index); //检查是否越界
+
+        Object[] a = c.toArray();
+        int numNew = a.length;
+        if (numNew == 0) //如果新增元素数量为0，则不增加，并返回false
+            return false;
+
+        Node&lt;E&gt; pred, succ; //index节点的前置节点，后置节点
+        if (index == size) { //在链表尾部追加数据
+            succ = null; //size节点（队尾）的后置节点一定是null
+            pred = last; //前置节点是队尾
+        } else {
+            succ = node(index);//取出index节点，作为后置节点
+            pred = succ.prev;//前置节点是，index节点的前一个节点
+        }
+
+        for (Object o : a) { //链表批量增加，是靠for循环遍历原数组，依次执行插入节点操作。
+            @SuppressWarnings(&quot;unchecked&quot;) E e = (E) o;
+            Node&lt;E&gt; newNode = new Node&lt;&gt;(pred, e, null); //以前置节点 和 元素值e，构建new一个新节点
+            if (pred == null) //如果前置节点是空，说明是头结点
+                first = newNode;
+            else /否则 前置节点的后置节点设置问新节点
+                pred.next = newNode;
+            pred = newNode; //步进，当前的节点为前置节点了，为下次添加节点做准备
+        }
+
+        if (succ == null) { //循环结束后，判断，如果后置节点是null。 说明此时是在队尾append的。
+            last = pred; //则设置尾节点
+        } else {
+            pred.next = succ;// 否则是在队中插入的节点 ，更新前置节点 后置节点
+            succ.prev = pred;//更新后置节点的前置节点
+        }
+
+        size += numNew;
+        modCount++;
+        return true;
+    }
+//根据index 查询出Node，
+Node&lt;E&gt; node(int index) {
+    // assert isElementIndex(index);
+//通过下标获取某个node 的时候，（增、查 ），会根据index处于前半段还是后半段 进行一个折半，以提升查询效率
+    if (index &lt; (size &gt;&gt; 1)) {
+        Node&lt;E&gt; x = first;
+        for (int i = 0; i &lt; index; i++)
+            x = x.next;
+        return x;
+    } else {
+        Node&lt;E&gt; x = last;
+        for (int i = size - 1; i &gt; index; i--)
+            x = x.prev;
+        return x;
+    }
+}
+
+</code></pre><ul>
+<li>删除指定位置的元素remove(int index)</li>
+</ul>
+<pre><code>public E remove(int index) {
+        checkElementIndex(index); //检查是否越界
+        return unlink(node(index));
+    }
+
+E unlink(Node&lt;E&gt; x) {
+        // assert x != null;
+        final E element = x.item; //当前节点的元素值
+        final Node&lt;E&gt; next = x.next; //当前节点的后置节点
+        final Node&lt;E&gt; prev = x.prev; //当前节点的前置节点
+
+        if (prev == null) { //如果前置节点为空(说明当前节点原本是头结点)
+            first = next; //则头结点等于后置节点 
+        } else {
+            prev.next = next;
+            x.prev = null;//将当前节点的 前置节点置空
+        }
+
+        if (next == null) { //如果后置节点为空（说明当前节点原本是尾节点）
+            last = prev; //则尾节点为前置节点
+        } else {
+            next.prev = prev; //将当前节点的 后置节点置空
+            x.next = null;
+        }
+
+        x.item = null;
+        size--;
+        modCount++;
+        return element;
+    }
+</code></pre><ul>
+<li>删除指定元素</li>
+</ul>
+<pre><code>public boolean remove(Object o) { //因为要考虑 null元素，也是分情况遍历
+        if (o == null) { //如果要删除的是null节点(从remove和add 里 可以看出，允许元素为null)
+            for (Node&lt;E&gt; x = first; x != null; x = x.next) { //遍历每个节点 对比
+                if (x.item == null) {
+                    unlink(x);
+                    return true;
+                }
+            }
+        } else {
+            for (Node&lt;E&gt; x = first; x != null; x = x.next) {
+                if (o.equals(x.item)) {
+                    unlink(x);
+                    return true;
+                }
+            }
+        }
+        return false;
+
+</code></pre><p>删也一定会修改modCount。 按下标删，也是先根据index找到Node，然后去链表上unlink掉这个Node。 按元素删，会先去遍历链表寻找是否有该Node，考虑到允许null值，所以会遍历两遍，然后再去unlink它。</p>
+<ul>
+<li>改set</li>
+</ul>
+<pre><code>public E set(int index, E element) {
+    checkElementIndex(index); //检查越界[0,size)
+    Node&lt;E&gt; x = node(index);//取出对应的Node
+    E oldVal = x.item;//保存旧值 供返回
+    x.item = element;//用新值覆盖旧值
+    return oldVal;//返回旧值
+}
+//改也是先根据index找到Node，然后替换值，改不修改modCount
 </code></pre><hr>
-<h2 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h2><ol>
-<li>由于spring boot内置了tomcat，一般打包成了jar包</li>
-</ol>
-<pre><code>java -jar scaffold-0.0.1-SNAPSHOT.jar
-java -jar scaffold-0.0.1-SNAPSHOT.jar --server.port=9090
- 可以用命令改变端口
-</code></pre><p>运行后，可以访问接口。<br>==打包后发现配置内不加@Configuration或者@Component无法获取配置==</p>
-<ol start="2">
-<li>打成war需要做的配置（基于2.0以上）</li>
-</ol>
-<pre><code>        &lt;packaging&gt;jar&lt;/packaging&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
-            &lt;scope&gt;provided&lt;/scope&gt;
-        &lt;/dependency&gt;
-</code></pre><ol start="3">
-<li>打包别名设置：</li>
-</ol>
-<pre><code>&lt;build&gt;
-        &lt;plugins&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
-            &lt;/plugin&gt;
-        &lt;/plugins&gt;
-        &lt;finalName&gt;demo&lt;/finalName&gt; #设置成你想要的名字
-    &lt;/build&gt;
-</code></pre>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>链表批量增加，是靠for循环遍历原数组，依次执行插入节点操作。对比ArrayList是通过System.arraycopy完成批量增加的。增加一定会修改modCount。</li>
+<li><p>通过下标获取某个node 的时候，（add select），会根据index处于前半段还是后半段 进行一个折半，以提升查询效率</p>
+</li>
+<li><p>删也一定会修改modCount。 按下标删，也是先根据index找到Node，然后去链表上unlink掉这个Node。 按元素删，会先去遍历链表寻找是否有该Node，如果有，去链表上unlink掉这个Node。</p>
+</li>
+<li><p>改也是先根据index找到Node，然后替换值。改不修改modCount。<br>查本身就是根据index找到Node。</p>
+</li>
+<li>所以它的CRUD操作里，都涉及到根据index去找到Node的操作。</li>
+</ul>
+
             </div>
             <hr>
 
@@ -715,7 +806,7 @@ java -jar scaffold-0.0.1-SNAPSHOT.jar --server.port=9090
                     </span>
                     <a href="http://yoursite.com" class="b-link-green">Coder的欢乐时光</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/2018/12/13/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-er/" class="b-link-green">从零开始搭建spring boot脚手架（二）</a>
+                    <a href="/2019/02/11/linkedlist-yuan-ma-xue-xi/" class="b-link-green">LinkedList源码学习</a>
                 </p>
             </div>
         </div>
@@ -759,46 +850,46 @@ java -jar scaffold-0.0.1-SNAPSHOT.jar --server.port=9090
     <div class="row article-row">
         
         <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge left-badge text-color">上一篇</div>
+            <div class="article-badge left-badge text-color">本篇</div>
             <div class="card">
-                <a href="/2018/12/17/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-san/">
+                <a href="/2019/02/11/linkedlist-yuan-ma-xue-xi/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="从零开始搭建spring boot脚手架（三）">
+                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="LinkedList源码学习">
                         
-                        <span class="card-title">从零开始搭建spring boot脚手架（三）</span>
+                        <span class="card-title">LinkedList源码学习</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary">
-本篇主要讲述如何使用druid连接mysql，并用jdbcTemplate做测试。
+LinkedList作为List接口的另一种实现，与ArrayList形成互补关系，增删快，查改慢。
 
 
-druid配置application.yml配置文件如下：
-spring:
-  datasource:
-    type: com.alibaba.d</div>
+为什么要用LinkedList?
+LinkedList 是线程不安全的，允许元素为null的双向链表。
+它实现了Deque,所以它也</div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2018-12-17
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-02-11
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/spring-boot/" class="post-category" target="_blank">
-                                    spring boot
+                            <a href="/categories/java基础/" class="post-category" target="_blank">
+                                    java基础
                                 </a>
                             
-                            <a href="/categories/spring-boot/微服务/" class="post-category" target="_blank">
-                                    微服务
+                            <a href="/categories/java基础/源码学习，集合/" class="post-category" target="_blank">
+                                    源码学习，集合
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -806,16 +897,12 @@ spring:
                         <span class="chip bg-color">java</span>
                     </a>
                     
-                    <a href="/tags/脚手架/" target="_blank">
-                        <span class="chip bg-color">脚手架</span>
+                    <a href="/tags/LinkedList/" target="_blank">
+                        <span class="chip bg-color">LinkedList</span>
                     </a>
                     
-                    <a href="/tags/druid/" target="_blank">
-                        <span class="chip bg-color">druid</span>
-                    </a>
-                    
-                    <a href="/tags/jdbcTemplate/" target="_blank">
-                        <span class="chip bg-color">jdbcTemplate</span>
+                    <a href="/tags/JAVA8/" target="_blank">
+                        <span class="chip bg-color">JAVA8</span>
                     </a>
                     
                 </div>
@@ -827,37 +914,40 @@ spring:
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">下一篇</div>
             <div class="card">
-                <a href="/2018/12/12/cong-ling-kai-shi-da-jian-spring-boot-jiao-shou-jia-yi/">
+                <a href="/2019/01/23/arraylist-yuan-ma-xue-xi/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="从零开始搭建spring boot脚手架（一）">
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="ArrayList源码学习">
                         
-                        <span class="card-title">从零开始搭建spring boot脚手架（一）</span>
+                        <span class="card-title">ArrayList源码学习</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary">
-spring boot相关概念先请各位大佬自行百度下，有时间可以发个博客介绍下。
+从这篇文章开始学习jdk相关源码，源码学习的目的是为了面试，了解原理，以及源码设计的独到之处。
 
 
-项目构建作者用idea开发，idea初始化spring boot项目，一般是最新稳定版。
-构建过程如下：
-file-&gt;new-&gt;projec</div>
+为什么要用ArrayList?
+数组:
+
+
+ 在内存中划分出一块连续的地址空间用来进行元素的存储，由于直接操作内存，性能比集合类高一些。
+</div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2018-12-12
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-01-23
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/spring-boot/" class="post-category" target="_blank">
-                                    spring boot
+                            <a href="/categories/java基础/" class="post-category" target="_blank">
+                                    java基础
                                 </a>
                             
-                            <a href="/categories/spring-boot/微服务/" class="post-category" target="_blank">
-                                    微服务
+                            <a href="/categories/java基础/源码学习，集合/" class="post-category" target="_blank">
+                                    源码学习，集合
                                 </a>
                             
                             
@@ -871,8 +961,20 @@ file-&gt;new-&gt;projec</div>
                         <span class="chip bg-color">java</span>
                     </a>
                     
-                    <a href="/tags/脚手架/" target="_blank">
-                        <span class="chip bg-color">脚手架</span>
+                    <a href="/tags/JAVA8/" target="_blank">
+                        <span class="chip bg-color">JAVA8</span>
+                    </a>
+                    
+                    <a href="/tags/ArrayList/" target="_blank">
+                        <span class="chip bg-color">ArrayList</span>
+                    </a>
+                    
+                    <a href="/tags/代码技巧/" target="_blank">
+                        <span class="chip bg-color">代码技巧</span>
+                    </a>
+                    
+                    <a href="/tags/哈希/" target="_blank">
+                        <span class="chip bg-color">哈希</span>
                     </a>
                     
                 </div>
